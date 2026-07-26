@@ -341,7 +341,7 @@
                         {
                             to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
                             from_name: data.nom || 'Client Questionnaire',
-                            subject: `📋 Questionnaire - ${data.nom || 'Nouveau client'}- ${data.entreprise || 'Entreprise'} - ${data.metier || 'Métier'}`, 
+                            subject: `📋 ${data.prenom || ''} ${data.nom || 'Nouveau client'} - ${data.entreprise || 'Entreprise'} - ${data.metier || 'Métier'}`, 
                             html_body: emailBody,
                             pdf_base64: base64PDF,
                             pdf_filename: `questionnaire_${new Date().toISOString().split('T')[0]}.pdf`
