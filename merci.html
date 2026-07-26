@@ -188,8 +188,8 @@
             <div id="responsesContainer"></div>
 
             <div class="button-group">
-                <button id="downloadBtn" class="btn btn-primary" onclick="downloadAndSendPDF()">
-                    📥 Télécharger et envoyer mes réponses
+                <button id="sendBtn" class="btn btn-primary" onclick="sendToLuminixe()">
+                    📨 Envoyer mes réponses à Luminixe
                 </button>
                 <button class="btn btn-secondary" onclick="goBack()">
                     ← Retour accueil
@@ -197,11 +197,11 @@
             </div>
 
             <div id="loadingIndicator" class="loading">
-                ⏳ Génération du PDF et envoi en cours...
+                ⏳ Envoi de vos réponses en cours...
             </div>
 
             <div id="successNotification" class="success-notification">
-                ✅ Succès! Votre PDF a été téléchargé et envoyé à luminixe.web@gmail.com
+                ✅ Merci! Vos réponses ont bien été envoyées à Luminixe. Une copie des réponses sera envoyée à votre mail.
             </div>
 
             <div id="errorNotification" class="error-notification">
@@ -209,14 +209,6 @@
             </div>
         </div>
     </div>
-
-    <div id="pdfContent" style="padding: 20px; font-family: Arial, sans-serif; width: 100%; background: white;">
-    <div style="text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
-        <h2 style="color: #2d5a2a; margin-bottom: 5px;">📋 Questionnaire Stratégique Luminixe</h2>
-        <p style="color: #666; font-size: 12px;">Résumé des réponses - <span id="pdfDate"></span></p>
-    </div>
-    <div id="pdfResponses"></div>
-</div>
 
     </div>
 
@@ -229,381 +221,72 @@
             RECIPIENT_EMAIL: 'luminixe.web@gmail.com'
         };
 
-        function loadResponses() {
-            const saved = localStorage.getItem('questionnaire_data');
-            const data = saved ? JSON.parse(saved) : {};
+        async function sendToLuminixe() {
+    const loading = document.getElementById('loadingIndicator');
+    const success = document.getElementById('successNotification');
+    const error = document.getElementById('errorNotification');
+    const btn = document.getElementById('sendBtn');
 
-            if (Object.keys(data).length === 0) {
-                document.getElementById('responsesContainer').innerHTML = `
-                    <p style="text-align: center; color: #999;">Aucune réponse enregistrée</p>
-                `;
-                return;
-            }
+    loading.classList.add('active');
+    success.classList.remove('active');
+    error.classList.remove('active');
+    btn.disabled = true;
 
-            let html = '';
-            Object.entries(data).forEach(([key, value]) => {
-                const displayValue = Array.isArray(value) ? value.join(', ') : value;
-                const displayKey = key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim();
+    try {
+        const saved = localStorage.getItem('questionnaire_data');
+        const data = saved ? JSON.parse(saved) : {};
 
-                html += `
-                    <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 4px; border-left: 3px solid #3d7a3a;">
-                        <div style="font-weight: 600; color: #333; font-size: 13px; margin-bottom: 3px;">${displayKey}</div>
-                        <div style="color: #666; font-size: 13px;">${displayValue || '(Vide)'}</div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('responsesContainer').innerHTML = html;
-
-            // Construire le PDF structuré
-            buildPDFContent(data);
+        const clientEmail = data.email || data.adresse_email || '';
+        
+        if (!clientEmail) {
+            throw new Error('Email manquant.');
         }
 
-        function buildPDFContent(data) {
-            let pdfHtml = `
-                <h2 style="text-align: center; color: #2d5a2a; margin-bottom: 5px; font-size: 20px; font-weight: bold;">
-                    📋 Questionnaire Stratégique Luminixe
-                </h2>
-                <p style="text-align: center; color: #666; margin: 0 0 20px 0; font-size: 12px;">
-                    Date: ${new Date().toLocaleDateString('fr-FR')}
-                </p>
-            `;
-
-            // Section 1: Votre Activité
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">📋 1. VOTRE ACTIVITÉ</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Prénom:</strong> ${data.prenom || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Nom:</strong> ${data.nom || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Entreprise:</strong> ${data.entreprise || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Métier:</strong> ${data.metier || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Expérience:</strong> ${data.experience || '(Non rempli)'} années
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Équipe:</strong> ${data.equipe || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Zone d'intervention:</strong> ${data.zone || '(Non rempli)'}
-                    </div>
-                </div>
-            `;
-
-            // Section 2: Clients
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">🎯 2. À QUI VOUS VOUS ADRESSEZ</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Types de clients:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.clients_types_cibles || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Client idéal:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.client_ideal_brief || '(Non rempli)'}</div>
-                    </div>
-                </div>
-            `;
-
-            // Section 3: Concurrents & Valeurs
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">⚔️ 3. DIFFÉRENCIATION & VALEURS</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Différenciation:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.differentiation || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Promesse unique:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.promesse_unique || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Valeur 1:</strong> ${data.valeur1_nom || '(Non rempli)'} - ${data.valeur1_exemple || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Valeur 2:</strong> ${data.valeur2_nom || '(Non rempli)'} - ${data.valeur2_exemple || '(Non rempli)'}
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Valeur 3:</strong> ${data.valeur3_nom || '(Non rempli)'} - ${data.valeur3_exemple || '(Non rempli)'}
-                    </div>
-                </div>
-            `;
-
-            // Section 4: Vision
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">🚀 4. VISION</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Projection future:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.vision_futur || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Position marché:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.vision_marche || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Possède un site internet:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.possede_site || '(Non rempli)'}</div>
-                    </div>
-                </div>
-            `;
-
-            // Section 5: Aspect visuel
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">🎨 5. ASPECT VISUEL</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Situation graphique:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.situation_graphique || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Image désirée:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.image_desiree || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Image à éviter:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.image_a_eviter || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Émotions cibles:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.emotions_cibles || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">CTA prioritaire:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.cta_prioritaire || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Style graphique:</strong> 
-                        <div style="color: #666; font-size: 12px;">${Array.isArray(data.style_graphique) ? data.style_graphique.join(', ') : (data.style_graphique || '(Non rempli)')}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Police d'écriture:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.police_style || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Couleur principale:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.couleur_principale || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Couleur secondaire:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.couleur_secondaire || '(Non rempli)'}</div>
-                    </div>
-                </div>
-            `;
-
-            // Section 6: Services
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">💼 6. SERVICES & PAGES</h3>
-                    
-                    <div style="margin-bottom: 12px; padding: 8px; background: #f0f7f0; border-radius: 4px;">
-                        <strong style="color: #2d5a2a;">Service 1: ${data.service1_nom || '(Non rempli)'}</strong>
-                        <div style="color: #666; font-size: 11px; margin-left: 10px;">
-                            • Problème: ${data.service1_probleme || '(Non rempli)'}<br>
-                            • Résultats: ${data.service1_resultats || '(Non rempli)'}<br>
-                            • Délai: ${data.service1_delai || '(Non rempli)'}
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 12px; padding: 8px; background: #f0f7f0; border-radius: 4px;">
-                        <strong style="color: #2d5a2a;">Service 2: ${data.service2_nom || '(Non rempli)'}</strong>
-                        <div style="color: #666; font-size: 11px; margin-left: 10px;">
-                            • Problème: ${data.service2_probleme || '(Non rempli)'}<br>
-                            • Résultats: ${data.service2_resultats || '(Non rempli)'}<br>
-                            • Délai: ${data.service2_delai || '(Non rempli)'}
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 12px; padding: 8px; background: #f0f7f0; border-radius: 4px;">
-                        <strong style="color: #2d5a2a;">Service 3: ${data.service3_nom || '(Non rempli)'}</strong>
-                        <div style="color: #666; font-size: 11px; margin-left: 10px;">
-                            • Problème: ${data.service3_probleme || '(Non rempli)'}<br>
-                            • Résultats: ${data.service3_resultats || '(Non rempli)'}<br>
-                            • Délai: ${data.service3_delai || '(Non rempli)'}
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 12px;">
-                        <strong style="color: #2d5a2a;">Résultat principal clients:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.accueil_resultat_principal || '(Non rempli)'}</div>
-                    </div>
-                </div>
-            `;
-
-            // Section 7: Réalisations
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">🎯 7. RÉALISATIONS</h3>
-                    
-                    <div style="margin-bottom: 12px; padding: 8px; background: #f0f7f0; border-radius: 4px;">
-                        <strong style="color: #2d5a2a;">Projet 1</strong>
-                        <div style="color: #666; font-size: 11px; margin-left: 10px;">
-                            Besoin: ${data.projet1_besoin || '(Non rempli)'}<br>
-                            Solution: ${data.projet1_solution || '(Non rempli)'}<br>
-                            Résultat: ${data.projet1_resultat || '(Non rempli)'}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Section 8: À propos
-            pdfHtml += `
-                <div style="margin-bottom: 20px; border-bottom: 2px solid #3d7a3a; padding-bottom: 10px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">📖 8. À PROPOS</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Histoire de l'entreprise:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.about_histoire || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Passion:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.about_passion || '(Non rempli)'}</div>
-                    </div>
-                </div>
-            `;
-
-            // Section 9: Contact
-            pdfHtml += `
-                <div style="margin-bottom: 20px;">
-                    <h3 style="color: #3d7a3a; font-size: 14px; margin-bottom: 10px;">📍 9. CONTACT</h3>
-                    
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Adresse:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.contact_adresse_complete || '(Non rempli)'} ${data.contact_code_postal || ''} ${data.contact_ville || ''}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Horaires semaine:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.contact_horaires_semaine || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Samedi:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.contact_horaires_samedi || '(Non rempli)'}</div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <strong style="color: #2d5a2a;">Dimanche:</strong> 
-                        <div style="color: #666; font-size: 12px;">${data.contact_horaires_dimanche || '(Non rempli)'}</div>
-                    </div>
-                </div>
-            `;
-
-            pdfHtml += `<p style="text-align: center; color: #999; font-size: 10px; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px;">Fin du questionnaire - ${new Date().toLocaleDateString('fr-FR')}</p>`;
-
-            document.getElementById('pdfResponses').innerHTML = pdfHtml;
-        }
-
-        async function downloadAndSendPDF() {
-            const loading = document.getElementById('loadingIndicator');
-            const success = document.getElementById('successNotification');
-            const error = document.getElementById('errorNotification');
-            const btn = document.getElementById('downloadBtn');
-
-            loading.classList.add('active');
-            success.classList.remove('active');
-            error.classList.remove('active');
-            btn.disabled = true;
-
-            try {
-                const pdfBlob = await generatePDF();
-                downloadPDFLocally(pdfBlob);
-                await sendPDFViaEmailJS(pdfBlob);
-                loading.classList.remove('active');
-                success.classList.add('active');
-            } catch (err) {
-                console.error('❌ Erreur:', err);
-                loading.classList.remove('active');
-                error.classList.add('active');
-            } finally {
-                btn.disabled = false;
-            }
-        }
-
-        function generatePDF() {
-            return new Promise((resolve, reject) => {
-                const element = document.getElementById('pdfContent');
-                const opt = {
-                    margin: [10, 10, 10, 10],
-                    filename: `questionnaire_luminixe_${new Date().toISOString().split('T')[0]}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true, logging: false },
-                    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
-                };
-
-                html2pdf()
-                    .set(opt)
-                    .from(element)
-                    .outputPdf('blob')
-                    .then(blob => resolve(blob))
-                    .catch(err => reject(err));
-            });
-        }
-
-        function downloadPDFLocally(pdfBlob) {
-            const url = URL.createObjectURL(pdfBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `questionnaire_luminixe_${new Date().toISOString().split('T')[0]}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        async function sendPDFViaEmailJS(pdfBlob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = async () => {
-                    const base64PDF = reader.result.split(',')[1];
-                    const saved = localStorage.getItem('questionnaire_data');
-                    const data = saved ? JSON.parse(saved) : {};
-
-                    let emailBody = '<h2>📋 Nouvelles réponses au questionnaire!</h2>';
-                    emailBody += '<p><strong>Date:</strong> ' + new Date().toLocaleDateString('fr-FR') + '</p>';
-                    emailBody += '<p><em>Le PDF avec toutes les réponses est en pièce jointe.</em></p>';
-
-                    emailjs.send(
-                        EMAILJS_CONFIG.SERVICE_ID,
-                        EMAILJS_CONFIG.TEMPLATE_ID,
-                        {
-                            to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
-                            from_name: data.nom || 'Client Questionnaire',
-                            subject: `📋 ${data.prenom || ''} ${data.nom || 'Nouveau client'} - ${data.entreprise || 'Entreprise'} - ${data.metier || 'Métier'}`, 
-                            html_body: emailBody,
-                            pdf_base64: base64PDF,
-                            pdf_filename: `questionnaire_${new Date().toISOString().split('T')[0]}.pdf`
-                        }
-                    ).then(response => {
-                        console.log('✅ Email EmailJS envoyé');
-                        resolve();
-                    }).catch(error => {
-                        console.error('❌ Erreur EmailJS:', error);
-                        reject(error);
-                    });
-                };
-                reader.onerror = () => reject(new Error('Erreur lecture PDF'));
-                reader.readAsDataURL(pdfBlob);
-            });
-        }
-
-        function goBack() {
-            window.location.href = 'index.html';
-        }
-
-        window.addEventListener('load', () => {
-            loadResponses();
-            document.getElementById('pdfDate').textContent = new Date().toLocaleDateString('fr-FR');
+        // 1️⃣ Envoie au webhook Make
+        const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                responses: data,
+                client_email: clientEmail,
+                timestamp: new Date().toISOString()
+            })
         });
+
+        if (!makeResponse.ok) {
+            throw new Error('Erreur lors de l\'envoi à Make');
+        }
+
+        // 2️⃣ Notification EmailJS pour toi
+        await emailjs.send(
+            EMAILJS_CONFIG.SERVICE_ID,
+            EMAILJS_CONFIG.TEMPLATE_ID,
+            {
+                to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
+                from_name: data.prenom || 'Client',
+                subject: `📋 ${data.prenom || ''} ${data.nom || ''} - ${data.entreprise || 'Entreprise'} (${data.metier || 'Métier'})`
+            }
+        );
+
+        localStorage.removeItem('questionnaire_data');
+
+        loading.classList.remove('active');
+        success.classList.add('active');
+    } catch (err) {
+        console.error('❌ Erreur:', err);
+        loading.classList.remove('active');
+        error.classList.add('active');
+        error.textContent = '❌ ' + err.message;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+window.addEventListener('load', () => {
+    document.getElementById('pdfDate').textContent = new Date().toLocaleDateString('fr-FR');
+});
     </script>
 </body>
 </html>
