@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Merci! - Questionnaire Luminixe</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3d7a3a 0%, #2d5a2a 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #155724;
+        }
+
+        .success-message strong {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: #3d7a3a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2d5a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(61, 122, 58, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            color: #1565c0;
+            margin-top: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .success-notification {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #28a745;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .success-notification.active {
+            display: block;
+        }
+
+        .error-notification {
+            display: none;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .error-notification.active {
+            display: block;
+        }
+
+        #pdfContent {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .button-group {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Merci!</h1>
+            <p>Vos réponses ont été enregistrées avec succès</p>
+        </div>
+
+        <div class="content">
+            <div class="success-message">
+                <strong>🎉 Questionnaire complété!</strong>
+                <p>Téléchargez et envoyez vos réponses à Luminixe</p>
+            </div>
+
+            <div id="responsesContainer"></div>
+
+            <div class="button-group">
+                <button id="downloadBtn" class="btn btn-primary" onclick="downloadAndSendPDF()">
+                    📥 Télécharger et envoyer mes réponses
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    ← Retour accueil
+                </button>
+            </div>
+
+            <div id="loadingIndicator" class="loading">
+                ⏳ Génération du PDF et envoi en cours...
+            </div>
+
+            <div id="successNotification" class="success-notification">
+                ✅ Succès! Votre PDF a été téléchargé et envoyé à luminixe.web@gmail.com
+            </div>
+
+            <div id="errorNotification" class="error-notification">
+                ❌ Une erreur s'est produite. Veuillez réessayer.
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu caché pour le PDF -->
+    <div id="pdfContent" style="padding: 10px; font-family: Arial, sans-serif; width: 100%;">
+        <h1 style="text-align: center; color: #2d5a2a; margin: 5px 0 10px 0; font-size: 18px;">
+            Questionnaire Stratégique Luminixe
+        </h1>
+        <p style="text-align: center; color: #666; margin: 0 0 15px 0; font-size: 12px;">
+            Résumé des réponses - <span id="pdfDate"></span>
+        </p>
+        <div id="pdfResponses"></div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION EmailJS ====================
+        // ✅ VOS 3 CLÉS REMPLACÉES:
+        emailjs.init('F8-L4l7KrpktL2Fwc');
+
+        const EMAILJS_CONFIG = {
+            SERVICE_ID: 'service_qmmstqq',
+            TEMPLATE_ID: 'template_03u4ouy',
+            RECIPIENT_EMAIL: 'luminixe.web@gmail.com'
+        };
+
+        // ==================== CHARGER LES RÉPONSES ====================
+        function loadResponses() {
+            const saved = localStorage.getItem('questionnaire_data');
+            const data = saved ? JSON.parse(saved) : {};
+
+            if (Object.keys(data).length === 0) {
+                document.getElementById('responsesContainer').innerHTML = `
+                    <p style="text-align: center; color: #999;">Aucune réponse enregistrée</p>
+                `;
+                return;
+            }
+
+            let html = '';
+            let pdfHtml = '';
+
+            Object.entries(data).forEach(([key, value]) => {
+                const displayValue = Array.isArray(value) ? value.join(', ') : value;
+                const displayKey = key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim();
+
+                html += `
+                    <div style="background: #f9f9f9; padding: 10px; margin-bottom: 8px; border-radius: 4px; border-left: 3px solid #3d7a3a;">
+                        <div style="font-weight: 600; color: #333; font-size: 13px; margin-bottom: 3px;">${displayKey}</div>
+                        <div style="color: #666; font-size: 13px;">${displayValue || '(Vide)'}</div>
+                    </div>
+                `;
+
+                pdfHtml += `
+                    <div style="margin-bottom: 8px; padding: 6px; background: #f9f9f9; border-left: 2px solid #3d7a3a; border-radius: 2px;">
+                        <strong style="color: #2d5a2a; display: block; margin-bottom: 2px; font-size: 12px;">${displayKey}</strong>
+                        <span style="color: #666; font-size: 11px;">${displayValue || '(Vide)'}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('responsesContainer').innerHTML = html;
+            document.getElementById('pdfResponses').innerHTML = pdfHtml;
+        }
+
+        // ==================== TÉLÉCHARGER ET ENVOYER PDF ====================
+        async function downloadAndSendPDF() {
+            const loading = document.getElementById('loadingIndicator');
+            const success = document.getElementById('successNotification');
+            const error = document.getElementById('errorNotification');
+            const btn = document.getElementById('downloadBtn');
+
+            loading.classList.add('active');
+            success.classList.remove('active');
+            error.classList.remove('active');
+            btn.disabled = true;
+
+            try {
+                // 1. Générer le PDF
+                const pdfBlob = await generatePDF();
+
+                // 2. Télécharger le PDF en local
+                downloadPDFLocally(pdfBlob);
+
+                // 3. Envoyer via EmailJS
+                await sendPDFViaEmailJS(pdfBlob);
+
+                // Succès!
+                loading.classList.remove('active');
+                success.classList.add('active');
+
+            } catch (err) {
+                console.error('❌ Erreur:', err);
+                loading.classList.remove('active');
+                error.classList.add('active');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ==================== GÉNÉRER LE PDF ====================
+        function generatePDF() {
+            return new Promise((resolve, reject) => {
+                const element = document.getElementById('pdfContent');
+                const opt = {
+                    margin: [5, 5, 5, 5],
+                    filename: `questionnaire_luminixe_${new Date().toISOString().split('T')[0]}.pdf`,
+                    image: { type: 'jpeg', quality: 0.95 },
+                    html2canvas: { scale: 2, useCORS: true },
+                    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+                };
+
+                html2pdf()
+                    .set(opt)
+                    .from(element)
+                    .outputPdf('blob')
+                    .then(blob => resolve(blob))
+                    .catch(err => reject(err));
+            });
+        }
+
+        // ==================== TÉLÉCHARGER LOCALEMENT ====================
+        function downloadPDFLocally(pdfBlob) {
+            const url = URL.createObjectURL(pdfBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `questionnaire_luminixe_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // ==================== ENVOYER VIA EmailJS ====================
+        async function sendPDFViaEmailJS(pdfBlob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    const base64PDF = reader.result.split(',')[1];
+                    const saved = localStorage.getItem('questionnaire_data');
+                    const data = saved ? JSON.parse(saved) : {};
+
+                    // Créer résumé texte
+                    let emailBody = '<h2>📋 Nouvelles réponses au questionnaire!</h2>';
+                    emailBody += '<p><strong>Date:</strong> ' + new Date().toLocaleDateString('fr-FR') + '</p>';
+                    emailBody += '<p><em>Le PDF avec toutes les réponses est en pièce jointe.</em></p>';
+
+                    // Envoyer via EmailJS
+                    emailjs.send(
+                        EMAILJS_CONFIG.SERVICE_ID,
+                        EMAILJS_CONFIG.TEMPLATE_ID,
+                        {
+                            to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
+                            from_name: data.qui_etes_vous || 'Client Questionnaire',
+                            subject: `📋 Questionnaire - ${data.qui_etes_vous || 'Nouveau client'}`,
+                            html_body: emailBody,
+                            pdf_base64: base64PDF,
+                            pdf_filename: `questionnaire_${new Date().toISOString().split('T')[0]}.pdf`
+                        }
+                    ).then(response => {
+                        console.log('✅ Email EmailJS envoyé');
+                        resolve();
+                    }).catch(error => {
+                        console.error('❌ Erreur EmailJS:', error);
+                        reject(error);
+                    });
+                };
+                reader.onerror = () => reject(new Error('Erreur lecture PDF'));
+                reader.readAsDataURL(pdfBlob);
+            });
+        }
+
+        // ==================== NAVIGATION ====================
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // ==================== INITIALISER ====================
+        window.addEventListener('load', () => {
+            loadResponses();
+            document.getElementById('pdfDate').textContent = new Date().toLocaleDateString('fr-FR');
+        });
+    </script>
+</body>
+</html>
