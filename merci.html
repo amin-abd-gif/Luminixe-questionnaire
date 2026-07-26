@@ -210,6 +210,7 @@
         </div>
     </div>
 
+    <!-- Contenu caché pour le PDF -->
     <div id="pdfContent" style="padding: 10px; font-family: Arial, sans-serif; width: 100%;">
         <h1 style="text-align: center; color: #2d5a2a; margin: 5px 0 10px 0; font-size: 18px;">
             Questionnaire Stratégique Luminixe
@@ -221,6 +222,7 @@
     </div>
 
     <script>
+        // ==================== CONFIGURATION EmailJS ====================
         emailjs.init('F8-L4l7KrpktL2Fwc');
 
         const EMAILJS_CONFIG = {
@@ -229,6 +231,7 @@
             RECIPIENT_EMAIL: 'luminixe.web@gmail.com'
         };
 
+        // ==================== CHARGER LES RÉPONSES ====================
         function loadResponses() {
             const saved = localStorage.getItem('questionnaire_data');
             const data = saved ? JSON.parse(saved) : {};
@@ -266,6 +269,7 @@
             document.getElementById('pdfResponses').innerHTML = pdfHtml;
         }
 
+        // ==================== TÉLÉCHARGER ET ENVOYER PDF ====================
         async function downloadAndSendPDF() {
             const loading = document.getElementById('loadingIndicator');
             const success = document.getElementById('successNotification');
@@ -278,11 +282,19 @@
             btn.disabled = true;
 
             try {
+                // 1. Générer le PDF
                 const pdfBlob = await generatePDF();
+
+                // 2. Télécharger le PDF en local
                 downloadPDFLocally(pdfBlob);
+
+                // 3. Envoyer via EmailJS
                 await sendPDFViaEmailJS(pdfBlob);
+
+                // Succès!
                 loading.classList.remove('active');
                 success.classList.add('active');
+
             } catch (err) {
                 console.error('❌ Erreur:', err);
                 loading.classList.remove('active');
@@ -292,6 +304,7 @@
             }
         }
 
+        // ==================== GÉNÉRER LE PDF ====================
         function generatePDF() {
             return new Promise((resolve, reject) => {
                 const element = document.getElementById('pdfContent');
@@ -312,6 +325,7 @@
             });
         }
 
+        // ==================== TÉLÉCHARGER LOCALEMENT ====================
         function downloadPDFLocally(pdfBlob) {
             const url = URL.createObjectURL(pdfBlob);
             const link = document.createElement('a');
@@ -323,6 +337,7 @@
             URL.revokeObjectURL(url);
         }
 
+        // ==================== ENVOYER VIA EmailJS ====================
         async function sendPDFViaEmailJS(pdfBlob) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -331,17 +346,19 @@
                     const saved = localStorage.getItem('questionnaire_data');
                     const data = saved ? JSON.parse(saved) : {};
 
+                    // Créer résumé texte
                     let emailBody = '<h2>📋 Nouvelles réponses au questionnaire!</h2>';
                     emailBody += '<p><strong>Date:</strong> ' + new Date().toLocaleDateString('fr-FR') + '</p>';
                     emailBody += '<p><em>Le PDF avec toutes les réponses est en pièce jointe.</em></p>';
 
+                    // Envoyer via EmailJS
                     emailjs.send(
                         EMAILJS_CONFIG.SERVICE_ID,
                         EMAILJS_CONFIG.TEMPLATE_ID,
                         {
                             to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
-                            from_name: data.nom || 'Client Questionnaire',
-                            subject: `📋 Questionnaire - ${data.nom || 'Nouveau client'}`,
+                            from_name: `${data.prenom || ''} ${data.nom || 'Client Questionnaire'}`.trim(),
+                            subject: `📋 ${data.prenom || ''} ${data.nom || 'Nouveau client'} - ${data.entreprise || 'Entreprise'} - ${data.metier || 'Métier'}`.trim(),
                             html_body: emailBody,
                             pdf_base64: base64PDF,
                             pdf_filename: `questionnaire_${new Date().toISOString().split('T')[0]}.pdf`
@@ -359,10 +376,12 @@
             });
         }
 
+        // ==================== NAVIGATION ====================
         function goBack() {
             window.location.href = 'index.html';
         }
 
+        // ==================== INITIALISER ====================
         window.addEventListener('load', () => {
             loadResponses();
             document.getElementById('pdfDate').textContent = new Date().toLocaleDateString('fr-FR');
