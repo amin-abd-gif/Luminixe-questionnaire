@@ -1493,9 +1493,20 @@
         // Sauvegarder automatiquement les données
         function saveData() {
             const data = {};
+               
+            // Capturer les éléments avec data-question
             document.querySelectorAll('[data-question]').forEach(el => {
                 data[el.getAttribute('data-question')] = el.value;
             });
+            
+            // ✅ AJOUTER AUSSI ceux avec un "name" (inputs normaux)
+            document.querySelectorAll('input[name]:not([type="radio"]):not([type="checkbox"]), textarea[name], select[name]').forEach(el => {
+                if (el.name && !data[el.name]) {
+                    data[el.name] = el.value;
+                }
+            });
+            
+            // Radios et checkboxes
             document.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked').forEach(el => {
                 if (!data[el.name]) data[el.name] = [];
                 if (el.type === 'checkbox') {
@@ -1504,8 +1515,10 @@
                     data[el.name] = el.value;
                 }
             });
+            
             localStorage.setItem('questionnaire_data', JSON.stringify(data));
             updateSummary();
+        }
         }
 
         // Charger les données sauvegardées
@@ -1513,10 +1526,21 @@
             const saved = localStorage.getItem('questionnaire_data');
             if (saved) {
                 const data = JSON.parse(saved);
+                
+                // Charger les éléments avec data-question
                 Object.entries(data).forEach(([key, value]) => {
                     const el = document.querySelector(`[data-question="${key}"]`);
                     if (el) el.value = Array.isArray(value) ? value[0] : value;
-                    
+                });
+                
+                // ✅ AJOUTER : Charger aussi les inputs normaux avec name
+                Object.entries(data).forEach(([key, value]) => {
+                    const el = document.querySelector(`input[name="${key}"]:not([type="radio"]):not([type="checkbox"]), textarea[name="${key}"], select[name="${key}"]`);
+                    if (el) el.value = Array.isArray(value) ? value[0] : value;
+                });
+                
+                // Radios et checkboxes
+                Object.entries(data).forEach(([key, value]) => {
                     const radioEl = document.querySelector(`input[name="${key}"][value="${value}"]`);
                     if (radioEl) radioEl.checked = true;
                     
@@ -1527,6 +1551,14 @@
                         });
                     }
                 });
+                
+                // Restaurer la visibilité selon le cas sélectionné
+                setTimeout(() => {
+                    const selectedCase = document.querySelector('input[name="situation_graphique"]:checked');
+                    if (selectedCase) updateVisibility();
+                }, 100);
+            }
+        }
                 
                 // Restaurer la visibilité selon le cas sélectionné
                 setTimeout(() => {
