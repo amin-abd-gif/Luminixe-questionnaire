@@ -404,25 +404,25 @@
                     <h2 class="section-title">👤 Qui êtes vous ?</h2>
 
                     <div class="question-group">
-                        <label>Prénom</label>
-    <input type="text" placeholder="Votre prénom" data-question="prenom">
-    
     <label>Nom</label>
     <input type="text" placeholder="Votre nom" data-question="nom">        
                     </div>
-                    
-                    <div class="question-group">
+                        
+                        <label>Prénom</label>
+    <input type="text" placeholder="Votre prénom" data-question="prenom">
+    
+                <div class="question-group">
     <label>Votre email *</label>
     <input type="email" placeholder="Votre email" data-question="email" required>
                     </div>
                     
                     <div class="question-group">
-                        <label>Nom de votre entreprise / activité</label>
+                        <label>Nom de votre entreprise </label>
                         <input type="text" placeholder="Ex: Salon de coiffure Les Cheveux d'Or" data-question="entreprise">
                     </div>
 
                     <div class="question-group">
-                        <label>Quel est votre métier ?</label>
+                        <label>Quel est votre métier/profession ?</label>
                         <input type="text" placeholder="Ex: Coiffeur coloriste, Coach en nutrition" data-question="metier">
                     </div>
 
@@ -432,7 +432,7 @@
                     </div>
 
                     <div class="question-group">
-                        <label>Avez-vous une équipe ?</label>
+                        <label>Vous travaillez seul ou en équipe ?</label>
                         <div class="radio-group">
                             <label><input type="radio" name="equipe" value="solo"> Je travaille seul(e)</label>
                             <label><input type="radio" name="equipe" value="petit"> Petite équipe (2-5 personnes)</label>
@@ -445,6 +445,13 @@
                         <label>Zone(s) d'intervention</label>
                         <textarea placeholder="Ex: Strasbourg et région alsacienne, France entière, international" data-question="zone"></textarea>
                     </div>
+
+                     <div class="question-group">
+                        <label>Avez-vous actuellement un site internet ?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="possede_site" value="oui"> Oui, j'ai déja un site mais je souhaite le refaire</label>
+                            <label><input type="radio" name="possede_site" value="non"> Non, j'en ai pas et je voudrai en crée un</label>
+                     </div>
                 </div>
 
                 <!-- SECTION 2: À QUI VOUS VOUS ADRESSEZ ? -->
@@ -452,7 +459,7 @@
                     <h2 class="section-title">🎯 À qui vous vous adressez ?</h2>
 
                     <div class="question-group">
-                        <label>Avec quels types de clients travaillez-vous actuellement et lesquels souhaitez-vous cibler ?</label>
+                        <label>Vous travaillez avec quel type de client?</label>
                         <textarea placeholder="Ex: PME B2B, particuliers âgés de 25-45 ans, startups, gérants de commerce" data-question="clients_types_cibles"></textarea>
                     </div>
 
@@ -519,14 +526,7 @@
                         <label>Quelle place voulez-vous prendre dans votre marché ?</label>
                         <textarea placeholder="Ex: Être le leader régional, niche premium, solution alternative accessible" data-question="vision_marche"></textarea>
                     </div>
-
-                    <div class="question-group">
-                        <label>Avez-vous actuellement un site internet ?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="possede_site" value="oui"> Oui, j'ai déja un site mais je souhaite le refaire</label>
-                            <label><input type="radio" name="possede_site" value="non"> Non, j'en ai pas et je voudrai en crée un</label>
-                        </div>
-                    </div>
+                 </div>
                 </div>
 
                 <div class="buttons">
