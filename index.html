@@ -410,6 +410,7 @@
                         
                         <label>Prénom</label>
     <input type="text" placeholder="Votre prénom" data-question="prenom">
+                      </div>
     
                 <div class="question-group">
     <label>Votre email *</label>
@@ -1109,10 +1110,9 @@
                     </div>
                 </div>
 
-                <!-- PARTIE 3: PAGE SERVICES -->
+                <!-- PARTIE 3: PAGE SERVICES ET TARIFS -->
                 <div class="section">
-                    <h2 class="section-title">Partie 3 : Page Services et Tarifs</h2>
-
+               <h2 class="section-title">Partie 3 : Page Services et Tarifs</h2>
                     <div class="question-group">
                         <label>Comment souhaitez-vous présenter les tarifs ?</label>
                         <div class="checkbox-group">
@@ -1121,207 +1121,90 @@
                             <label><input type="checkbox" name="services_tarifs" value="les_deux" onchange="toggleServicePrices()"> Les deux</label>
                         </div>
                     </div>
-
                     <div class="question-group">
                         <label>Vos services</label>
                         <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Listez tous les services que vous proposez. Pour chaque service, répondez aux questions suivantes :</p>
                         
-                        <!-- Service 1 -->
-                        <div style="margin-bottom: 25px; padding: 15px; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 6px;">
-                            <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Service 1</label>
-                            
-                            <label style="margin-top: 10px;">Nom du service :</label>
-                            <input type="text" placeholder="Ex: Pose de cuisine" data-question="service1_nom">
+                        <div id="services_container">
+                            <div style="margin-bottom: 25px; padding: 15px; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 6px;">
+                                <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Service n°1</label>
+                                
+                                <label style="margin-top: 10px;">Nom du service :</label>
+                                <input type="text" placeholder="Ex: Pose de cuisine" data-question="service1_nom">
 
-                            <label>À quel problème répond-il ?</label>
-                            <input type="text" placeholder="Ex: Cuisine obsolète et inefficace" data-question="service1_probleme">
+                                <label>À quel problème répond-il ?</label>
+                                <input type="text" placeholder="Ex: Cuisine obsolète et inefficace" data-question="service1_probleme">
 
-                            <label>En quoi consiste ce service ?</label>
-                            <input type="text" placeholder="Description brève du service" data-question="service1_consist">
+                                <label>En quoi consiste ce service ?</label>
+                                <input type="text" placeholder="Description brève du service" data-question="service1_consist">
 
-                            <label>Quels résultats le client obtient-il ?</label>
-                            <input type="text" placeholder="Ex: Cuisine moderne, fonctionnelle et esthétique" data-question="service1_resultats">
+                                <label>Quels résultats le client obtient-il ?</label>
+                                <input type="text" placeholder="Ex: Cuisine moderne, fonctionnelle et esthétique" data-question="service1_resultats">
 
-                            <label>Pourquoi choisir ce service plutôt qu'un autre ?</label>
-                            <input type="text" placeholder="Votre différenciation" data-question="service1_pourquoi">
+                                <label>Pourquoi choisir ce service plutôt qu'un autre ?</label>
+                                <input type="text" placeholder="Votre différenciation" data-question="service1_pourquoi">
 
-                            <label>Sous quel délai le client voit-il les premiers résultats ?</label>
-                            <input type="text" placeholder="Ex: En 2-3 semaines" data-question="service1_delai">
+                                <label>Sous quel délai le client voit-il les premiers résultats ?</label>
+                                <input type="text" placeholder="Ex: En 2-3 semaines" data-question="service1_delai">
 
-                            <label style="margin-top: 15px;">Prix du service :</label>
-                            <div id="service1_price_section" style="display: none; margin-top: 8px; padding: 10px; background: #fff0e6; border-radius: 6px; border: 1px solid #ffc107;">
-                                <input type="text" placeholder="Ex: À partir de 2500€" data-question="service1_prix">
+                                <label style="margin-top: 15px;">Prix du service :</label>
+                                <div id="service1_price_section" style="display: none; margin-top: 8px; padding: 10px; background: #fff0e6; border-radius: 6px; border: 1px solid #ffc107;">
+                                    <input type="text" placeholder="Ex: À partir de 2500€" data-question="service1_prix">
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Service 2 -->
-                        <div style="margin-bottom: 25px; padding: 15px; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 6px;">
-                            <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Service 2</label>
-                            
-                            <label style="margin-top: 10px;">Nom du service :</label>
-                            <input type="text" placeholder="Ex: Rénovation salle de bain" data-question="service2_nom">
-
-                            <label>À quel problème répond-il ?</label>
-                            <input type="text" placeholder="Ex: Salle de bain vieillissante" data-question="service2_probleme">
-
-                            <label>En quoi consiste ce service ?</label>
-                            <input type="text" placeholder="Description brève du service" data-question="service2_consist">
-
-                            <label>Quels résultats le client obtient-il ?</label>
-                            <input type="text" placeholder="Ex: Salle de bain luxueuse et confortable" data-question="service2_resultats">
-
-                            <label>Pourquoi choisir ce service plutôt qu'un autre ?</label>
-                            <input type="text" placeholder="Votre différenciation" data-question="service2_pourquoi">
-
-                            <label>Sous quel délai le client voit-il les premiers résultats ?</label>
-                            <input type="text" placeholder="Ex: En 3-4 semaines" data-question="service2_delai">
-
-                            <label style="margin-top: 15px;">Prix du service :</label>
-                            <div id="service2_price_section" style="display: none; margin-top: 8px; padding: 10px; background: #fff0e6; border-radius: 6px; border: 1px solid #ffc107;">
-                                <input type="text" placeholder="Ex: À partir de 3500€" data-question="service2_prix">
-                            </div>
-                        </div>
-
-                        <!-- Service 3 -->
-                        <div style="margin-bottom: 25px; padding: 15px; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 6px;">
-                            <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Service 3</label>
-                            
-                            <label style="margin-top: 10px;">Nom du service :</label>
-                            <input type="text" placeholder="Ex: Extension de maison" data-question="service3_nom">
-
-                            <label>À quel problème répond-il ?</label>
-                            <input type="text" placeholder="Ex: Manque d'espace" data-question="service3_probleme">
-
-                            <label>En quoi consiste ce service ?</label>
-                            <input type="text" placeholder="Description brève du service" data-question="service3_consist">
-
-                            <label>Quels résultats le client obtient-il ?</label>
-                            <input type="text" placeholder="Ex: Plus d'espace de vie, augmentation valeur maison" data-question="service3_resultats">
-
-                            <label>Pourquoi choisir ce service plutôt qu'un autre ?</label>
-                            <input type="text" placeholder="Votre différenciation" data-question="service3_pourquoi">
-
-                            <label>Sous quel délai le client voit-il les premiers résultats ?</label>
-                            <input type="text" placeholder="Ex: En 2-3 mois" data-question="service3_delai">
-
-                            <label style="margin-top: 15px;">Prix du service :</label>
-                            <div id="service3_price_section" style="display: none; margin-top: 8px; padding: 10px; background: #fff0e6; border-radius: 6px; border: 1px solid #ffc107;">
-                                <input type="text" placeholder="Ex: À partir de 5000€" data-question="service3_prix">
-                            </div>
-                        </div>
+                        <button type="button" onclick="addService()" style="background: #ffc107; color: #333; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">+ Ajouter un service</button>
                     </div>
                 </div>
+            </div>
+        </div>
 
                 <!-- PARTIE 4: PAGE RÉALISATIONS -->
                 <div class="section">
+                    <div class="section">
                     <h2 class="section-title">Partie 4 : Page Réalisations</h2>
-                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Cette partie sert à présenter vos projets les plus importants.</p>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Cette partie sert à présenter vos réalisations les plus importantes.</p>
 
-                    <!-- Projet 1 -->
-                    <div style="margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;">
-                        <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Projet 1</label>
-                        
-                        <label>Quel était le besoin du client ?</label>
-                        <textarea placeholder="Décrivez le besoin" data-question="projet1_besoin"></textarea>
+                    <div id="projets_container">
+                        <div style="margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;">
+                            <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Réalisation n°1</label>
 
-                        <label>Quel problème rencontrait-il ?</label>
-                        <textarea placeholder="Décrivez le problème" data-question="projet1_pb"></textarea>
+                            <label>Quel était le besoin du client ?</label>
+                            <textarea placeholder="Décrivez le besoin" data-question="projet1_besoin"></textarea>
 
-                        <label>Quelle solution avez-vous apportée ?</label>
-                        <textarea placeholder="Décrivez la solution apportée" data-question="projet1_solution"></textarea>
+                            <label>Quel problème rencontrait-il ?</label>
+                            <textarea placeholder="Décrivez le problème" data-question="projet1_pb"></textarea>
 
-                        <label>Quel a été le résultat ?</label>
-                        <textarea placeholder="Décrivez le résultat final" data-question="projet1_resultat"></textarea>
+                            <label>Quelle solution avez-vous apportée ?</label>
+                            <textarea placeholder="Décrivez la solution apportée" data-question="projet1_solution"></textarea>
 
-                        <label>Avez vous des photos avant/après de votre travail ?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="projet1_photos" value="oui" onchange="toggleProjectUpload(1)"> Oui</label>
-                            <label><input type="radio" name="projet1_photos" value="non" onchange="toggleProjectUpload(1)"> Non</label>
-                        </div>
+                            <label>Quel a été le résultat ?</label>
+                            <textarea placeholder="Décrivez le résultat final" data-question="projet1_resultat"></textarea>
 
-                        <div id="projet1_upload_section" style="display:none; margin-top: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #4caf50;">
-                            <label style="color: #2e7d32; font-weight: 600;">Voulez vous les mettre sur votre site ? <span style="color: #ff9800; font-size: 12px;">(fortement recommandé)</span></label>
+                            <label>Avez vous des photos avant/après de votre travail ?</label>
                             <div class="radio-group">
-                                <label><input type="radio" name="projet1_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(1)"> Oui</label>
-                                <label><input type="radio" name="projet1_mettre_online" value="non" onchange="toggleProjectPhotosUpload(1)"> Non</label>
+                                <label><input type="radio" name="projet1_photos" value="oui" onchange="toggleProjectUpload(1)"> Oui</label>
+                                <label><input type="radio" name="projet1_photos" value="non" onchange="toggleProjectUpload(1)"> Non</label>
                             </div>
-                            <div id="projet1_photos_upload_box" style="display:none; margin-top: 12px;">
-                                <label>Importez vos photos avant/après :</label>
-                                <input type="file" multiple accept="image/*" data-question="projet1_photos_files" style="margin-bottom: 10px;">
-                                <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
+
+                            <div id="projet1_upload_section" style="display:none; margin-top: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #4caf50;">
+                                <label style="color: #2e7d32; font-weight: 600;">Voulez vous les mettre sur votre site ? <span style="color: #ff9800; font-size: 12px;">(fortement recommandé)</span></label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="projet1_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(1)"> Oui</label>
+                                    <label><input type="radio" name="projet1_mettre_online" value="non" onchange="toggleProjectPhotosUpload(1)"> Non</label>
+                                </div>
+                                <div id="projet1_photos_upload_box" style="display:none; margin-top: 12px;">
+                                    <label>Importez vos photos avant/après :</label>
+                                    <input type="file" multiple accept="image/*" data-question="projet1_photos_files" style="margin-bottom: 10px;">
+                                    <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Projet 2 -->
-                    <div style="margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;">
-                        <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Projet 2</label>
-                        
-                        <label>Quel était le besoin du client ?</label>
-                        <textarea placeholder="Décrivez le besoin" data-question="projet2_besoin"></textarea>
-
-                        <label>Quel problème rencontrait-il ?</label>
-                        <textarea placeholder="Décrivez le problème" data-question="projet2_pb"></textarea>
-
-                        <label>Quelle solution avez-vous apportée ?</label>
-                        <textarea placeholder="Décrivez la solution apportée" data-question="projet2_solution"></textarea>
-
-                        <label>Quel a été le résultat ?</label>
-                        <textarea placeholder="Décrivez le résultat final" data-question="projet2_resultat"></textarea>
-
-                        <label>Avez vous des photos avant/après de votre travail ?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="projet2_photos" value="oui" onchange="toggleProjectUpload(2)"> Oui</label>
-                            <label><input type="radio" name="projet2_photos" value="non" onchange="toggleProjectUpload(2)"> Non</label>
-                        </div>
-
-                        <div id="projet2_upload_section" style="display:none; margin-top: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #4caf50;">
-                            <label style="color: #2e7d32; font-weight: 600;">Voulez vous les mettre sur votre site ? <span style="color: #ff9800; font-size: 12px;">(fortement recommandé)</span></label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="projet2_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(2)"> Oui</label>
-                                <label><input type="radio" name="projet2_mettre_online" value="non" onchange="toggleProjectPhotosUpload(2)"> Non</label>
-                            </div>
-                            <div id="projet2_photos_upload_box" style="display:none; margin-top: 12px;">
-                                <label>Importez vos photos avant/après :</label>
-                                <input type="file" multiple accept="image/*" data-question="projet2_photos_files" style="margin-bottom: 10px;">
-                                <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Projet 3 -->
-                    <div style="margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;">
-                        <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Projet 3</label>
-                        
-                        <label>Quel était le besoin du client ?</label>
-                        <textarea placeholder="Décrivez le besoin" data-question="projet3_besoin"></textarea>
-
-                        <label>Quel problème rencontrait-il ?</label>
-                        <textarea placeholder="Décrivez le problème" data-question="projet3_pb"></textarea>
-
-                        <label>Quelle solution avez-vous apportée ?</label>
-                        <textarea placeholder="Décrivez la solution apportée" data-question="projet3_solution"></textarea>
-
-                        <label>Quel a été le résultat ?</label>
-                        <textarea placeholder="Décrivez le résultat final" data-question="projet3_resultat"></textarea>
-
-                        <label>Avez vous des photos avant/après de votre travail ?</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="projet3_photos" value="oui" onchange="toggleProjectUpload(3)"> Oui</label>
-                            <label><input type="radio" name="projet3_photos" value="non" onchange="toggleProjectUpload(3)"> Non</label>
-                        </div>
-
-                        <div id="projet3_upload_section" style="display:none; margin-top: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #4caf50;">
-                            <label style="color: #2e7d32; font-weight: 600;">Voulez vous les mettre sur votre site ? <span style="color: #ff9800; font-size: 12px;">(fortement recommandé)</span></label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="projet3_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(3)"> Oui</label>
-                                <label><input type="radio" name="projet3_mettre_online" value="non" onchange="toggleProjectPhotosUpload(3)"> Non</label>
-                            </div>
-                            <div id="projet3_photos_upload_box" style="display:none; margin-top: 12px;">
-                                <label>Importez vos photos avant/après :</label>
-                                <input type="file" multiple accept="image/*" data-question="projet3_photos_files" style="margin-bottom: 10px;">
-                                <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
-                            </div>
+                    <button type="button" onclick="addRéalisation()" style="background: #9c27b0; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">+ Ajouter un projet</button>
+                </div>
                         </div>
                     </div>
                 </div>
