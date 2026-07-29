@@ -541,16 +541,16 @@
                     <h2 class="section-title">📊 Votre situation actuelle</h2>
                     <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Cette question adaptera le reste du questionnaire selon votre besoin</p>
                     
-                    <div class="question-group">
-                        <label>Cochez la case qui correspond à votre cas :</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="situation_graphique" value="case1" onchange="updateVisibility()"> ❌ <strong>J'ai pas de charte graphique</strong><br>&nbsp;&nbsp;(pas de logo, ni identité définie)</label>
-                            <label><input type="radio" name="situation_graphique" value="case2" onchange="updateVisibility()"> 📌 <strong>J'ai juste un logo</strong></label>
-                            <label><input type="radio" name="situation_graphique" value="case3" onchange="updateVisibility()"> 🔄 <strong>Je voudrai revoir certains points dans ma charte graphique</strong></label>
-                            <label><input type="radio" name="situation_graphique" value="case4" onchange="updateVisibility()"> 🔨 <strong>Je voudrai refaire ma charte graphique</strong></label>
-                            <label><input type="radio" name="situation_graphique" value="case5" onchange="updateVisibility()"> ✅ <strong>J'ai une charte graphique solide</strong><br>&nbsp;&nbsp;(logo + couleurs + typographie)</label>
-                        </div>
-                    </div>
+                   <div class="question-group">
+    <label>Cochez la case qui correspond à votre cas :</label>
+    <div class="radio-group">
+        <label><input type="radio" name="situation_graphique" value="case1" onchange="updateVisibility()"> ❌ <strong>J'ai pas de charte graphique</strong> (pas de logo, pas de couleurs, pas de police d'écriture)</label>
+        <label><input type="radio" name="situation_graphique" value="case2" onchange="updateVisibility()"> 📌 <strong>J'ai juste un logo</strong></label>
+        <label><input type="radio" name="situation_graphique" value="case3" onchange="updateVisibility()"> 🔄 <strong>Je voudrai revoir certains points dans ma charte graphique</strong></label>
+        <label><input type="radio" name="situation_graphique" value="case4" onchange="updateVisibility()"> 🔨 <strong>Je voudrai refaire toute ma charte graphique de A à Z </strong></label>
+        <label><input type="radio" name="situation_graphique" value="case5" onchange="updateVisibility()"> ✅ <strong>J'ai une charte graphique solide</strong> (logo + couleurs + police d'écriture)</label>
+    </div>
+</div>
                     
                     <!-- Upload charte (cas 5 uniquement) -->
                     <div class="question-group" id="upload_charte_group" style="display:none; background: #f0f7f0; padding: 15px; border-radius: 6px; border-left: 3px solid #3d7a3a; margin-top: 15px;">
