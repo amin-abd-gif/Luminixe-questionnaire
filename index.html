@@ -1519,7 +1519,6 @@
             localStorage.setItem('questionnaire_data', JSON.stringify(data));
             updateSummary();
         }
-        }
 
         // Charger les données sauvegardées
         function loadData() {
@@ -1559,15 +1558,7 @@
                 }, 100);
             }
         }
-                
-                // Restaurer la visibilité selon le cas sélectionné
-                setTimeout(() => {
-                    const selectedCase = document.querySelector('input[name="situation_graphique"]:checked');
-                    if (selectedCase) updateVisibility();
-                }, 100);
-            }
-        }
-
+    
         // Afficher/masquer textbox pour "Autre" support visuel
         function toggleOtherSupport() {
             const isOtherChecked = document.querySelector('input[name="supports_visuels"][value="autre_support"]:checked');
@@ -1879,7 +1870,11 @@
        if (base64Content.includes(',')) {
            base64Content = base64Content.split(',')[1];
        }
-      
+      // ✅ STOCKER DANS localStorage POUR merci.html
+       localStorage.setItem('charte_graphique_base64', base64Content);
+       localStorage.setItem('charte_graphique_filename', file.name);
+       localStorage.setItem('charte_graphique_type', file.type);
+       
        // Récupérer prénom et nom pour créer le nom du dossier
        const prenom = questionnaireData.prenom || 'Client';
        const nom = questionnaireData.nom || 'Inconnu';
