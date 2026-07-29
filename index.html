@@ -1821,6 +1821,93 @@
                 el.addEventListener('input', saveData);
             });
         });
+        function sendToMakeWithCharte() {
+   const webhookUrl = 'https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i'; // Votre URL Make
+  
+   // Récupérer les données du questionnaire
+   const savedData = localStorage.getItem('questionnaire_data');
+   const questionnaireData = savedData ? JSON.parse(savedData) : {};
+  
+   // Récupérer le fichier uploadé
+   const charteUploadInput = document.getElementById('charte_upload');
+  
+   if (!charteUploadInput || !charteUploadInput.files[0]) {
+       alert('❌ Erreur : Veuillez sélectionner un fichier de charte graphique');
+       return;
+   }
+  
+   const file = charteUploadInput.files[0];
+   const reader = new FileReader();
+  
+   reader.onload = function(event) {
+       // ✅ IMPORTANT : Enlever le préfixe "data:application/pdf;base64,"
+       let base64Content = event.target.result;
+      
+       // Vérifier s'il y a un préfixe et l'enlever
+       if (base64Content.includes(',')) {
+           base64Content = base64Content.split(',')[1];
+       }
+      
+       // Récupérer prénom et nom pour créer le nom du dossier
+       const prenom = questionnaireData.prenom || 'Client';
+       const nom = questionnaireData.nom || 'Inconnu';
+       const entreprise = questionnaireData.entreprise || '';
+       const metier = questionnaireData.metier || '';
+       const clientFolder = `${prenom} ${nom} ${entreprise} ${metier}`.trim();
+      
+       // Construire le JSON pour Make
+       const dataToSend = {
+           responses: questionnaireData,
+           charte_graphique: {
+               filename: file.name,
+               data: base64Content, // ✅ SANS LE PRÉFIXE !
+               type: file.type,
+               size: file.size
+           },
+           client_folder_name: clientFolder,
+           client_email: questionnaireData.email || 'non-fourni@example.com',
+           timestamp: new Date().toISOString()
+       };
+      
+       console.log('📤 Envoi des données à Make...');
+       console.log('📁 Dossier à créer:', clientFolder);
+       console.log('📄 Fichier:', file.name);
+      
+       // Envoyer au webhook Make
+       fetch(webhookUrl, {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json'
+           },
+           body: JSON.stringify(dataToSend)
+       })
+       .then(response => {
+           if (response.ok) {
+               console.log('✅ Données envoyées à Make avec succès !');
+               alert('✅ Questionnaire envoyé avec succès !\n\nVous allez être redirigé...');
+               // Nettoyer et rediriger
+               localStorage.removeItem('questionnaire_data');
+               setTimeout(() => {
+                   window.location.href = '/merci.html'; // Ou votre page de remerciement
+               }, 1500);
+           } else {
+               throw new Error('Erreur Make: ' + response.statusText);
+           }
+       })
+       .catch(error => {
+           console.error('❌ Erreur:', error);
+           alert('❌ Erreur lors de l\'envoi du questionnaire:\n' + error.message);
+       });
+   };
+  
+   reader.onerror = function() {
+       console.error('❌ Erreur lecture fichier');
+       alert('❌ Erreur lors de la lecture du fichier');
+   };
+  
+   // Lancer la lecture du fichier
+   reader.readAsDataURL(file);
+}
     </script>
 </body>
 </html>
