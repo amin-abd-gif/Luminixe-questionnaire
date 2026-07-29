@@ -1501,7 +1501,7 @@
             saveData();
         }
 
-        // Afficher/masquer textbox pour "Autre" style graphiques
+        // Afficher/masquer textbox pour "Autre" style graphique
         function toggleOtherStyle() {
             const selected = document.querySelector('input[name="style_graphique"]:checked');
             const otherBox = document.getElementById('autre_style_box');
@@ -1588,7 +1588,12 @@
             
             document.querySelectorAll('.tab-content')[index].classList.add('active');
             document.querySelectorAll('.tab-btn')[index].classList.add('active');
-        }
+            
+             // ✅ NOUVEAU - Remplir le récapitulatif quand on va à l'onglet "Vos réponses" (index 3)
+         if (index === 3) {
+          updateSummary();
+       }  
+     }
 
         // Mettre à jour le résumé
         function updateSummary() {
