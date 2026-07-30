@@ -248,11 +248,16 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                responses: data,
-                client_email: clientEmail,
-                timestamp: new Date().toISOString()
-            })
-        });
+    responses: data,
+    charte_graphique: {
+        filename: filename,
+        data: base64,
+        type: type
+    },
+    client_folder_name: `${data.prenom || 'Client'} ${data.nom || 'Inconnu'} ${data.entreprise || ''} ${data.metier || ''}`.trim(),
+    client_email: clientEmail,
+    timestamp: new Date().toISOString()
+})
 
         if (!makeResponse.ok) {
             throw new Error('Erreur lors de l\'envoi à Make');
