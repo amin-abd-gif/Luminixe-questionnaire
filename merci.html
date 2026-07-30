@@ -258,7 +258,8 @@
     client_email: clientEmail,
     timestamp: new Date().toISOString()
 })
-
+});
+        
         if (!makeResponse.ok) {
             throw new Error('Erreur lors de l\'envoi à Make');
         }
