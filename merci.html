@@ -298,61 +298,6 @@ function goBack() {
     window.location.href = 'index.html';
 }
     </script>
-    
-    <script>
-    window.addEventListener('load', function() {
-            const base64 = localStorage.getItem('charte_graphique_base64');
-            const filename = localStorage.getItem('charte_graphique_filename');
-            const type = localStorage.getItem('charte_graphique_type');
-            const savedData = localStorage.getItem('questionnaire_data');
-            
-            if (base64 && savedData) {
-                const questionnaireData = JSON.parse(savedData);
-                const webhookUrl = 'https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i';
-                
-                const prenom = questionnaireData.prenom || 'Client';
-                const nom = questionnaireData.nom || 'Inconnu';
-                const entreprise = questionnaireData.entreprise || '';
-                const metier = questionnaireData.metier || '';
-                const clientFolder = `${prenom} ${nom} ${entreprise} ${metier}`.trim();
-                
-                const dataToSend = {
-                    responses: questionnaireData,
-                    charte_graphique: {
-                        filename: filename,
-                        data: base64,
-                        type: type
-                    },
-                    client_folder_name: clientFolder,
-                    client_email: questionnaireData.email || 'non-fourni@example.com',
-                    timestamp: new Date().toISOString()
-                };
-                
-                console.log('📤 Envoi automatique des données à Make depuis merci.html...');
-                
-                fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(dataToSend)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('✅ Données envoyées à Make avec succès !');
-                        localStorage.removeItem('charte_graphique_base64');
-                        localStorage.removeItem('charte_graphique_filename');
-                        localStorage.removeItem('charte_graphique_type');
-                    } else {
-                        console.error('❌ Erreur Make:', response.statusText);
-                    }
-                })
-                .catch(error => {
-                    console.error('❌ Erreur envoi Make:', error);
-                });
-            }
-        });
-   </script> 
 
     <script>
     // Nettoyer complètement après que tout soit traité
