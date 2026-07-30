@@ -342,5 +342,15 @@ function goBack() {
             }
         });
    </script> 
+
+    <script>
+    // Nettoyer complètement après que tout soit traité
+    setTimeout(() => {
+        localStorage.removeItem('questionnaire_data');
+        localStorage.removeItem('charte_graphique_base64');
+        localStorage.removeItem('charte_graphique_filename');
+        localStorage.removeItem('charte_graphique_type');
+    }, 5000); // Attendre 5 secondes pour que Make traite tout
+</script>
 </body>
 </html>
