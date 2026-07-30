@@ -240,7 +240,12 @@
         if (!clientEmail) {
             throw new Error('Email manquant.');
         }
-
+        
+// Récupérer les données du localStorage
+  const base64 = localStorage.getItem('charte_graphique_base64');
+  const filename = localStorage.getItem('charte_graphique_filename');
+  const type = localStorage.getItem('charte_graphique_type');      
+        
         // 1️⃣ Envoie au webhook Make
         const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i', {
             method: 'POST',
