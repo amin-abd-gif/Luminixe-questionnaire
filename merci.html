@@ -240,57 +240,26 @@
         if (!clientEmail) {
             throw new Error('Email manquant.');
         }
-        
-// Récupérer les données du localStorage
-const base64 = localStorage.getItem('charte_graphique_base64');
-const filename = localStorage.getItem('charte_graphique_filename');
-const type = localStorage.getItem('charte_graphique_type');      
+// 🎯 Créer le JSON formaté pour le mail
+        const jsonContent = JSON.stringify(data, null, 2);
 
-// 1️⃣ Envoie au webhook Make
-const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        responses: data,
-        charte_graphique: {
-            filename: filename,
-            data: base64,
-            type: type
-        },
-        client_folder_name: `${data.prenom || 'Client'} ${data.nom || 'Inconnu'} ${data.entreprise || ''} ${data.metier || ''}`.trim(),
-        client_email: clientEmail,
-        timestamp: new Date().toISOString()
-    })
-});
-
-// 1️⃣ Envoie au webhook Make
-const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(bodyData)
-});
-
-        
-        if (!makeResponse.ok) {
-            throw new Error('Erreur lors de l\'envoi à Make');
-        }
-
-        // 2️⃣ Notification EmailJS pour toi
+        // 📧 Envoyer via EmailJS
         await emailjs.send(
             EMAILJS_CONFIG.SERVICE_ID,
             EMAILJS_CONFIG.TEMPLATE_ID,
             {
                 to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
                 from_name: data.prenom || 'Client',
-                subject: `📋 ${data.prenom || ''} ${data.nom || ''} - ${data.entreprise || 'Entreprise'} (${data.metier || 'Métier'})`
+                subject: `📋 ${data.prenom || ''} ${data.nom || ''} - ${data.entreprise || 'Entreprise'} (${data.metier || 'Métier'})`,
+                json_content: jsonContent
             }
         );
 
+        // Nettoyage
         localStorage.removeItem('questionnaire_data');
+        localStorage.removeItem('charte_graphique_base64');
+        localStorage.removeItem('charte_graphique_filename');
+        localStorage.removeItem('charte_graphique_type');
 
         loading.classList.remove('active');
         success.classList.add('active');
@@ -307,16 +276,6 @@ const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nyb
 function goBack() {
     window.location.href = 'index.html';
 }
-    </script>
-
-    <script>
-    // Nettoyer complètement après que tout soit traité
-    setTimeout(() => {
-        localStorage.removeItem('questionnaire_data');
-        localStorage.removeItem('charte_graphique_base64');
-        localStorage.removeItem('charte_graphique_filename');
-        localStorage.removeItem('charte_graphique_type');
-    }, 5000); // Attendre 5 secondes pour que Make traite tout
 </script>
 </body>
 </html>
