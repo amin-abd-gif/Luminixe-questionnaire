@@ -242,28 +242,36 @@
         }
         
 // Récupérer les données du localStorage
-  const base64 = localStorage.getItem('charte_graphique_base64');
-  const filename = localStorage.getItem('charte_graphique_filename');
-  const type = localStorage.getItem('charte_graphique_type');      
-        
-        // 1️⃣ Envoie au webhook Make
-        const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+const base64 = localStorage.getItem('charte_graphique_base64');
+const filename = localStorage.getItem('charte_graphique_filename');
+const type = localStorage.getItem('charte_graphique_type');      
+
+// Construire l'objet dynamiquement
+const bodyData = {
     responses: data,
-    charte_graphique: {
+    client_email: clientEmail,
+    timestamp: new Date().toISOString()
+};
+
+// Ajouter charte_graphique seulement si elle existe
+if (base64) {
+    bodyData.charte_graphique = {
         filename: filename,
         data: base64,
         type: type
+    };
+    bodyData.client_folder_name = `${data.prenom || 'Client'} ${data.nom || 'Inconnu'} ${data.entreprise || ''} ${data.metier || ''}`.trim();
+}
+
+// 1️⃣ Envoie au webhook Make
+const makeResponse = await fetch('https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
     },
-    client_folder_name: `${data.prenom || 'Client'} ${data.nom || 'Inconnu'} ${data.entreprise || ''} ${data.metier || ''}`.trim(),
-    client_email: clientEmail,
-    timestamp: new Date().toISOString()
-})
+    body: JSON.stringify(bodyData)
 });
+
         
         if (!makeResponse.ok) {
             throw new Error('Erreur lors de l\'envoi à Make');
