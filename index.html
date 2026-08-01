@@ -553,15 +553,6 @@
         <label><input type="radio" name="situation_graphique" value="case5" onchange="updateVisibility()"> ✅ <strong>J'ai une charte graphique solide</strong> (logo + couleurs + police d'écriture)</label>
     </div>
 </div>
-                    
-                    <!-- Upload charte (cas 5 uniquement) -->
-                    <div class="question-group" id="upload_charte_group" style="display:none; background: #f0f7f0; padding: 15px; border-radius: 6px; border-left: 3px solid #3d7a3a; margin-top: 15px;">
-                        <label><strong>📎 Importez votre charte graphique</strong></label>
-                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Vous pouvez envoyer vos fichiers de charte (PDF, images, etc.)</p>
-                        <input type="file" id="charte_upload" name="charte_upload" accept=".pdf,.jpg,.jpeg,.png,.ai,.psd,.svg" multiple style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%; cursor: pointer;">
-                        <p style="font-size: 11px; color: #999; margin-top: 8px;">Formats acceptés: PDF, JPG, PNG, AI, PSD (max 50MB par fichier)</p>
-                    </div>
-                </div>
 
                 <!-- Questions conditionnelles CAS 3 (Revoir) -->
                 <div class="section" id="case3_questions" style="display:none; background: #fff8f0; border: 2px dashed #FF9800; padding: 20px; margin-bottom: 30px;">
@@ -1517,12 +1508,6 @@
             const caseValue = selectedCase.value;
             saveData();
             
-            // Afficher/cacher l'upload charte (case 5 uniquement)
-            const uploadGroup = document.getElementById('upload_charte_group');
-            if (uploadGroup) {
-                uploadGroup.style.display = (caseValue === 'case5') ? 'block' : 'none';
-            }
-            
             // Afficher/cacher les questions case 3 (Revoir)
             const case3Questions = document.getElementById('case3_questions');
             if (case3Questions) {
@@ -1706,96 +1691,9 @@
                 el.addEventListener('input', saveData);
             });
         });
-        function sendToMakeWithCharte() {
-   const webhookUrl = 'https://hook.eu1.make.com/5h0dp8cihk8d2lyr8nybgilscsdtvz6i'; // Votre URL Make
-  
-   // Récupérer les données du questionnaire
-   const savedData = localStorage.getItem('questionnaire_data');
-   const questionnaireData = savedData ? JSON.parse(savedData) : {};
-  
-   // Récupérer le fichier uploadé
-   const charteUploadInput = document.getElementById('charte_upload');
-  
-   if (!charteUploadInput || !charteUploadInput.files[0]) {
-       alert('❌ Erreur : Veuillez sélectionner un fichier de charte graphique');
-       return;
-   }
-  
-   const file = charteUploadInput.files[0];
-   const reader = new FileReader();
-  
-   reader.onload = function(event) {
-       // ✅ IMPORTANT : Enlever le préfixe "data:application/pdf;base64,"
-       let base64Content = event.target.result;
-      
-       // Vérifier s'il y a un préfixe et l'enlever
-       if (base64Content.includes(',')) {
-           base64Content = base64Content.split(',')[1];
-       }
-      // ✅ STOCKER DANS localStorage POUR merci.html
-       localStorage.setItem('charte_graphique_base64', base64Content);
-       localStorage.setItem('charte_graphique_filename', file.name);
-       localStorage.setItem('charte_graphique_type', file.type);
-       
-       // Récupérer prénom et nom pour créer le nom du dossier
-       const prenom = questionnaireData.prenom || 'Client';
-       const nom = questionnaireData.nom || 'Inconnu';
-       const entreprise = questionnaireData.entreprise || '';
-       const metier = questionnaireData.metier || '';
-       const clientFolder = `${prenom} ${nom} ${entreprise} ${metier}`.trim();
-      
-       // Construire le JSON pour Make
-       const dataToSend = {
-           responses: questionnaireData,
-           charte_graphique: {
-               filename: file.name,
-               data: base64Content, // ✅ SANS LE PRÉFIXE !
-               type: file.type,
-               size: file.size
-           },
-           client_folder_name: clientFolder,
-           client_email: questionnaireData.email || 'non-fourni@example.com',
-           timestamp: new Date().toISOString()
-       };
-      
-       console.log('📤 Envoi des données à Make...');
-       console.log('📁 Dossier à créer:', clientFolder);
-       console.log('📄 Fichier:', file.name);
-      
-       // Envoyer au webhook Make
-       fetch(webhookUrl, {
-           method: 'POST',
-           headers: {
-               'Content-Type': 'application/json'
-           },
-           body: JSON.stringify(dataToSend)
-       })
-       .then(response => {
-           if (response.ok) {
-               console.log('✅ Données envoyées à Make avec succès !');
-               alert('✅ Questionnaire envoyé avec succès !\n\nVous allez être redirigé...');
-               // Nettoyer et rediriger
-               // localStorage.removeItem('questionnaire_data');
-               setTimeout(() => {
-                   window.location.href = '/merci.html'; // Ou votre page de remerciement
-               }, 1500);
-           } else {
-               throw new Error('Erreur Make: ' + response.statusText);
-           }
-       })
-       .catch(error => {
-           console.error('❌ Erreur:', error);
-           alert('❌ Erreur lors de l\'envoi du questionnaire:\n' + error.message);
-       });
-   };
-  
-   reader.onerror = function() {
-       console.error('❌ Erreur lecture fichier');
-       alert('❌ Erreur lors de la lecture du fichier');
-   };
-  
-   // Lancer la lecture du fichier
-   reader.readAsDataURL(file);
+       function goToMerci() {
+    saveData();
+    window.location.href = 'merci.html';
 }
     </script>
 </body>
