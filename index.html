@@ -78,6 +78,11 @@
         .tab-content {
             display: none;
             animation: fadeIn 0.3s ease;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            background: white;
         }
 
         .tab-content.active {
@@ -97,7 +102,7 @@
             font-size: 18px;
             font-weight: 700;
             color: #2d5a2a;
-            margin-bottom: 15px;
+            margin-bottom: 7px;
             padding-bottom: 10px;
             border-bottom: 2px solid #e0e0e0;
         }
@@ -553,6 +558,8 @@
         <label><input type="radio" name="situation_graphique" value="case5" onchange="updateVisibility()"> ✅ <strong>J'ai une charte graphique solide</strong> (logo + couleurs + police d'écriture)</label>
     </div>
 </div>
+                    
+                </div>
 
                 <!-- Questions conditionnelles CAS 3 (Revoir) -->
                 <div class="section" id="case3_questions" style="display:none; background: #fff8f0; border: 2px dashed #FF9800; padding: 20px; margin-bottom: 30px;">
@@ -1179,8 +1186,11 @@
                                     <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
                         </div>
                     </div>
+                </div>
 
-                    <button type="button" onclick="addRéalisation()" style="background: #9c27b0; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">+ Ajouter un projet</button>
+                    <div style="text-align: center; margin-top: 20px; margin-bottom: 30px;">
+                        <button type="button" onclick="addRéalisation()" style="background: #9c27b0; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;">+ Ajouter un projet</button>
+                    </div>
                 </div>
 
                 <!-- PARTIE 5: PAGE À PROPOS -->
@@ -1339,8 +1349,8 @@
                 <div class="buttons">
                     <button class="btn btn-secondary" onclick="switchTab(2)">← Retour: Les pages</button>
                     <button class="btn btn-secondary" disabled>Fin du questionnaire ✓</button>
-        </div>
-    </div>
+                </div>
+            </div>
 
     <script>
         // Sauvegarder automatiquement les données
@@ -1508,6 +1518,11 @@
             const caseValue = selectedCase.value;
             saveData();
             
+            // Afficher/cacher l'upload charte (case 5 uniquement)
+            const uploadGroup = document.getElementById('upload_charte_group');
+            if (uploadGroup) {
+                uploadGroup.style.display = (caseValue === 'case5') ? 'block' : 'none';
+            }
             
             // Afficher/cacher les questions case 3 (Revoir)
             const case3Questions = document.getElementById('case3_questions');
@@ -1711,7 +1726,7 @@
         let projectCount = 1;
         function addRéalisation() {
             projectCount++;
-            const container = document.querySelector('[data-question="projet1_besoin"]').closest('div').parentElement;
+            const container = document.getElementById('projets_container');
             const newProject = document.createElement('div');
             newProject.style.cssText = 'margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;';
             newProject.innerHTML = `
