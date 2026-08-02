@@ -220,7 +220,7 @@
             RECIPIENT_EMAIL: 'luminixe.web@gmail.com'
         };
 
-        async function sendToLuminixe() {
+       async function sendToLuminixe() {
     const loading = document.getElementById('loadingIndicator');
     const success = document.getElementById('successNotification');
     const error = document.getElementById('errorNotification');
@@ -240,22 +240,19 @@
         if (!clientEmail) {
             throw new Error('Email manquant.');
         }
-// 🎯 Créer le JSON formaté pour le mail
+
         const jsonContent = JSON.stringify(data, null, 2);
 
-        // 📧 Envoyer via EmailJS
         await emailjs.send(
             EMAILJS_CONFIG.SERVICE_ID,
             EMAILJS_CONFIG.TEMPLATE_ID,
             {
                 to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
-                from_name: data.prenom || 'Client',
                 subject: `📋 ${data.prenom || ''} ${data.nom || ''} - ${data.entreprise || 'Entreprise'} (${data.metier || 'Métier'})`,
                 json_content: jsonContent
             }
         );
 
-        // Nettoyage
         localStorage.removeItem('questionnaire_data');
         localStorage.removeItem('charte_graphique_base64');
         localStorage.removeItem('charte_graphique_filename');
