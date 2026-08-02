@@ -553,14 +553,6 @@
         <label><input type="radio" name="situation_graphique" value="case5" onchange="updateVisibility()"> ✅ <strong>J'ai une charte graphique solide</strong> (logo + couleurs + police d'écriture)</label>
     </div>
 </div>
-                    
-                    <!-- Upload charte (cas 5 uniquement) -->
-                    <div class="question-group" id="upload_charte_group" style="display:none; background: #f0f7f0; padding: 15px; border-radius: 6px; border-left: 3px solid #3d7a3a; margin-top: 15px;">
-                        <label><strong>📎 Importez votre charte graphique</strong></label>
-                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Vous pouvez envoyer vos fichiers de charte (PDF, images, etc.)</p>
-                        <p style="font-size: 11px; color: #999; margin-top: 8px;">Formats acceptés: PDF, JPG, PNG, AI, PSD (max 50MB par fichier)</p>
-                    </div>
-                </div>
 
                 <!-- Questions conditionnelles CAS 3 (Revoir) -->
                 <div class="section" id="case3_questions" style="display:none; background: #fff8f0; border: 2px dashed #FF9800; padding: 20px; margin-bottom: 30px;">
@@ -1516,11 +1508,6 @@
             const caseValue = selectedCase.value;
             saveData();
             
-            // Afficher/cacher l'upload charte (case 5 uniquement)
-            const uploadGroup = document.getElementById('upload_charte_group');
-            if (uploadGroup) {
-                uploadGroup.style.display = (caseValue === 'case5') ? 'block' : 'none';
-            }
             
             // Afficher/cacher les questions case 3 (Revoir)
             const case3Questions = document.getElementById('case3_questions');
