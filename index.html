@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Questionnaire Stratégique - Luminixe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3d7a3a 0%, #2d5a2a 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            background: #f5f5f5;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #3d7a3a;
+            border-bottom-color: #3d7a3a;
+            background: white;
+        }
+
+        .tab-btn:hover {
+            background: white;
+            color: #3d7a3a;
+        }
+
+        .content {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d5a2a;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .question-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #3d7a3a;
+        }
+
+        .question-group.critical {
+            border-left-color: #ff9800;
+            background: #fff8f0;
+        }
+
+        .question-group.seo {
+            border-left-color: #185fa5;
+            background: #f0f7ff;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .critical-label::before {
+            content: "⚠️ CRITIQUE - ";
+            color: #ff9800;
+            font-weight: 700;
+        }
+
+        .seo-label::before {
+            content: "🔍 SEO - ";
+            color: #185fa5;
+            font-weight: 700;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3d7a3a;
+            box-shadow: 0 0 0 3px rgba(61, 122, 58, 0.1);
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-group label,
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .color-label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .style-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .style-option {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .style-option:hover {
+            border-color: #3d7a3a;
+            background: #f0f7f0;
+        }
+
+        .style-option input[type="radio"] {
+            display: none;
+        }
+
+        .style-option input[type="radio"]:checked + label {
+            color: #3d7a3a;
+            font-weight: 700;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3d7a3a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2d5a2a;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .styles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .style-card {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .style-card:hover {
+            border-color: #3d7a3a;
+            background: #f0f7f0;
+        }
+
+        .style-card input[type="radio"] {
+            display: none;
+        }
+
+        .style-card input[type="radio"]:checked + span {
+            color: #3d7a3a;
+            font-weight: 700;
+        }
+
+        .supports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .support-checkbox {
+            display: flex;
+            align-items: center;
+        }
+
+        .support-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .summary-section {
+            background: #f0f7f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .export-btn {
+            background: #185fa5;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .export-btn:hover {
+            background: #0d4080;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3d7a3a;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Questionnaire Stratégique</h1>
+            <p>Luminixe - Créons votre présence digitale</p>
+
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(0)">📋 Votre activité</button>
+            <button class="tab-btn" onclick="switchTab(1)">🎨 Aspect visuel</button>
+            <button class="tab-btn" onclick="switchTab(2)">📑 Les pages</button>
+            <button class="tab-btn" onclick="switchTab(3)">💾 Vos réponses</button>
+        </div>
+
+        <div class="content">
+            <!-- TAB 1: VOTRE ACTIVITÉ -->
+            <div class="tab-content active">
+                <!-- SECTION 1: QUI ÊTES VOUS ? -->
+                <div class="section">
+                    <h2 class="section-title">👤 Qui êtes vous ?</h2>
+
+                    <div class="question-group">
+    <label>Nom</label>
+    <input type="text" placeholder="Votre nom" data-question="nom">        
+                    </div>
+
+                    <div class="question-group">
+                        <label>Prénom</label>
+    <input type="text" placeholder="Votre prénom" data-question="prenom">
+                      </div>
+    
+                <div class="question-group">
+    <label>Votre email *</label>
+    <input type="email" placeholder="Votre email" data-question="email" required>
+                    </div>
+                    
+                    <div class="question-group">
+                        <label>Nom de votre entreprise </label>
+                        <input type="text" placeholder="Ex: Salon de coiffure Les Cheveux d'Or" data-question="entreprise">
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quel est votre métier/profession ?</label>
+                        <input type="text" placeholder="Ex: Coiffeur coloriste, Coach en nutrition" data-question="metier">
+                    </div>
+
+                    <div class="question-group">
+                        <label>Depuis combien de temps exercez-vous ce métier ?</label>
+                        <input type="number" placeholder="Nombre d'années" data-question="experience">
+                    </div>
+
+                    <div class="question-group">
+                        <label>Vous travaillez seul ou en équipe ?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="equipe" value="solo"> Je travaille seul(e)</label>
+                            <label><input type="radio" name="equipe" value="petit"> Petite équipe (2-5 personnes)</label>
+                            <label><input type="radio" name="equipe" value="moyen"> Équipe moyenne (6-15 personnes)</label>
+                            <label><input type="radio" name="equipe" value="grand"> Équipe importante (15+ personnes)</label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Zone(s) d'intervention</label>
+                        <textarea placeholder="Ex: Strasbourg et région alsacienne, France entière, international" data-question="zone"></textarea>
+                    </div>
+
+                     <div class="question-group">
+                        <label>Avez-vous actuellement un site internet ?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="possede_site" value="oui"> Oui, j'ai déja un site mais je souhaite le refaire</label>
+                            <label><input type="radio" name="possede_site" value="non"> Non, j'en ai pas et je voudrai en crée un</label>
+                     </div>
+                </div>
+
+                <!-- SECTION 2: À QUI VOUS VOUS ADRESSEZ ? -->
+                <div class="section">
+                    <h2 class="section-title">🎯 À qui vous vous adressez ?</h2>
+
+                    <div class="question-group">
+                        <label>Vous travaillez pour quel type de client?</label>
+                        <textarea placeholder="Ex: PME B2B, particuliers âgés de 25-45 ans, startups, gérants de commerce" data-question="clients_types_cibles"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Décrivez brièvement votre client idéal</label>
+                        <textarea placeholder="Budget, secteur, secteur, localisation, besoin spécifique, problème principal" data-question="client_ideal_brief"></textarea>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: VOS CONCURRENTS -->
+                <div class="section">
+                    <h2 class="section-title">⚔️ Vos concurrents</h2>
+
+                    <div class="question-group">
+                        <label>Qu'est-ce qui vous différencie de vos concurrents ?</label>
+                        <textarea placeholder="Votre avantage compétitif unique - ce que vous faites mieux ou différemment" data-question="differentiation"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quelle est la promesse que vous êtes certain de tenir mieux que n'importe qui d'autre dans votre secteur ?</label>
+                        <textarea placeholder="Ex: 'Nous transformons votre image en 30 jours', 'Nous garantissons la satisfaction ou remboursement'" data-question="promesse_unique"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quelles sont les 3 valeurs fondamentales qui vous portent à cœur dans votre travail ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Pour chaque valeur, donnez le nom et un exemple concret qui illustre cette valeur</p>
+                        
+                        <div style="margin-bottom: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #3d7a3a;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 5px;">Valeur 1</label>
+                            <label>Nom de la valeur :</label>
+                            <input type="text" placeholder="Ex: Qualité, Innovation, Respect, Transparence" data-question="valeur1_nom">
+                            <label>Exemple dans votre travail :</label>
+                            <input type="text" placeholder="Ex: Nous refusons les raccourcis même sous pression de délais" data-question="valeur1_exemple">
+                        </div>
+
+                        <div style="margin-bottom: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #3d7a3a;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 5px;">Valeur 2</label>
+                            <label>Nom de la valeur :</label>
+                            <input type="text" placeholder="Ex: Qualité, Innovation, Respect, Transparence" data-question="valeur2_nom">
+                            <label>Exemple dans votre travail :</label>
+                            <input type="text" placeholder="Ex: Nous testons de nouvelles techniques chaque trimestre" data-question="valeur2_exemple">
+                        </div>
+
+                        <div style="padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #3d7a3a;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 5px;">Valeur 3</label>
+                            <label>Nom de la valeur :</label>
+                            <input type="text" placeholder="Ex: Qualité, Innovation, Respect, Transparence" data-question="valeur3_nom">
+                            <label>Exemple dans votre travail :</label>
+                            <input type="text" placeholder="Ex: Nous écoutons réellement nos clients et adaptons nos solutions" data-question="valeur3_exemple">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: VISION -->
+                <div class="section">
+                    <h2 class="section-title">🚀 Votre vision</h2>
+
+                    <div class="question-group">
+                        <label>Comment est-ce que vous vous projetez avec votre activité à l'avenir ?</label>
+                        <textarea placeholder="Ex: Augmenter mon chiffre d'affaires de 50%, ouvrir une nouvelle succursale, recruter une équipe" data-question="vision_futur"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quelle place voulez-vous prendre dans votre marché ?</label>
+                        <textarea placeholder="Ex: Être le leader régional, niche premium, solution alternative accessible" data-question="vision_marche"></textarea>
+                    </div>
+                 </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-primary" onclick="switchTab(1)">Suivant: Aspect visuel →</button>
+                </div>
+            </div>
+
+            <!-- TAB 2: ASPECT VISUEL -->
+            <div class="tab-content">
+                <!-- VOTRE SITUATION ACTUELLE -->
+                <div class="section" style="background: #f0f7f0; border: 2px solid #3d7a3a; padding: 20px; margin-bottom: 30px;">
+                    <h2 class="section-title">📊 Votre situation actuelle</h2>
+                    <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Cette question adaptera le reste du questionnaire selon votre besoin</p>
+                    
+                   <div class="question-group">
+    <label>Cochez la case qui correspond à votre cas :</label>
+    <div class="radio-group">
+        <label><input type="radio" name="situation_graphique" value="case1" onchange="updateVisibility()"> ❌ <strong>J'ai pas de charte graphique</strong> (pas de logo, pas de couleurs, pas de police d'écriture)</label>
+        <label><input type="radio" name="situation_graphique" value="case2" onchange="updateVisibility()"> 📌 <strong>J'ai juste un logo</strong></label>
+        <label><input type="radio" name="situation_graphique" value="case3" onchange="updateVisibility()"> 🔄 <strong>Je voudrai revoir certains points dans ma charte graphique</strong></label>
+        <label><input type="radio" name="situation_graphique" value="case4" onchange="updateVisibility()"> 🔨 <strong>Je voudrai refaire toute ma charte graphique de A à Z </strong></label>
+        <label><input type="radio" name="situation_graphique" value="case5" onchange="updateVisibility()"> ✅ <strong>J'ai une charte graphique solide</strong> (logo + couleurs + police d'écriture)</label>
+    </div>
+</div>
+                    
+                    <!-- Upload charte (cas 5 uniquement) -->
+                    <div class="question-group" id="upload_charte_group" style="display:none; background: #f0f7f0; padding: 15px; border-radius: 6px; border-left: 3px solid #3d7a3a; margin-top: 15px;">
+                        <label><strong>📎 Importez votre charte graphique</strong></label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Vous pouvez envoyer vos fichiers de charte (PDF, images, etc.)</p>
+                        <p style="font-size: 11px; color: #999; margin-top: 8px;">Formats acceptés: PDF, JPG, PNG, AI, PSD (max 50MB par fichier)</p>
+                    </div>
+                </div>
+
+                <!-- Questions conditionnelles CAS 3 (Revoir) -->
+                <div class="section" id="case3_questions" style="display:none; background: #fff8f0; border: 2px dashed #FF9800; padding: 20px; margin-bottom: 30px;">
+                    <h2 class="section-title">🔍 Affinage de votre charte</h2>
+
+                    <div class="question-group">
+                        <label>Quels éléments voulez-vous absolument garder de votre charte actuelle ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Éléments à préserver sans modification</p>
+                        <textarea placeholder="Ex: Logo tel qu'il est, couleur principale verte, typographie élégante" data-question="elements_a_garder"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quels points spécifiquement voulez-vous revoir ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Éléments à améliorer ou adapter</p>
+                        <textarea placeholder="Ex: Moderniser la palette, affiner la typographie, ajuster le logo pour mobile" data-question="points_a_revoir"></textarea>
+                    </div>
+                </div>
+
+                <!-- PERCEPTION CLIENT -->
+                <div class="section" data-case="1,2,3,4,5">
+                    <h2 class="section-title">🔍 Perception client</h2>
+
+                    <div class="question-group">
+                        <label>Quelle image vous voulez renvoyer à vos clients ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Utilisez 3 adjectifs minimums</p>
+                        <textarea placeholder="Ex: Professionnel, innovant, fiable" data-question="image_desiree"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quelle image vous ne voulez pas renvoyer à vos clients ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Utilisez 3 adjectifs minimums</p>
+                        <textarea placeholder="Ex: Pas cher, Douteux, Dépassé" data-question="image_a_eviter"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quelles émotions voulez-vous faire ressentir à vos clients quand ils arrivent sur votre site internet ?</label>
+                        <textarea placeholder="Ex: Confiance, Excitation, Sérénité" data-question="emotions_cibles"></textarea>
+                    </div>
+                </div>
+
+                <!-- OBJECTIF DU SITE -->
+                <div class="section">
+                    <h2 class="section-title">🎯 Objectif du site</h2>
+
+                    <div class="question-group">
+                        <label>Que voulez-vous que vos clients fassent absolument sur votre site ?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="cta_prioritaire" value="appel" onchange="toggleOtherCta()"> Appel téléphonique</label>
+                            <label><input type="radio" name="cta_prioritaire" value="rdv" onchange="toggleOtherCta()"> Prise de RDV</label>
+                            <label><input type="radio" name="cta_prioritaire" value="demande" onchange="toggleOtherCta()"> Demande de devis</label>
+                            <label><input type="radio" name="cta_prioritaire" value="contact" onchange="toggleOtherCta()"> Contact simple</label>
+                            <label><input type="radio" name="cta_prioritaire" value="achat" onchange="toggleOtherCta()"> Achat en ligne</label>
+                            <label><input type="radio" name="cta_prioritaire" value="autre_cta" onchange="toggleOtherCta()"> Autre</label>
+                        </div>
+                        <div id="autre_cta_box" style="display:none; margin-top: 15px;">
+                            <textarea placeholder="Décrivez l'action prioritaire que vous souhaitez" data-question="autre_cta"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Comment préférez-vous être contacté ?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="contact_type" value="tel" onchange="toggleOtherContact()"> Téléphone</label>
+                            <label><input type="checkbox" name="contact_type" value="email" onchange="toggleOtherContact()"> Email</label>
+                            <label><input type="checkbox" name="contact_type" value="formulaire" onchange="toggleOtherContact()"> Formulaire web</label>
+                            <label><input type="checkbox" name="contact_type" value="watsapp" onchange="toggleOtherContact()"> WhatsApp</label>
+                            <label><input type="checkbox" name="contact_type" value="messenger" onchange="toggleOtherContact()"> Messenger</label>
+                            <label><input type="checkbox" name="contact_type" value="autre_contact" onchange="toggleOtherContact()"> Autre</label>
+                        </div>
+                        <div id="autre_contact_box" style="display:none; margin-top: 15px;">
+                            <textarea placeholder="Précisez le ou les moyens de contact supplémentaires" data-question="autre_contact"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRÉFÉRENCE ARTISTIQUE -->
+                <div class="section">
+                    <h2 class="section-title">🎨 Préférence artistique</h2>
+
+                    <div class="question-group">
+                        <label>Quel style aimeriez vous avoir pour votre site ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Vous pouvez choisir plusieurs styles</p>
+                        <div class="styles-container">
+                            <div class="style-card">
+                                <input type="checkbox" id="style1" name="style_graphique" value="minimaliste" onchange="toggleOtherStyle()">
+                                <label for="style1"><span>Minimaliste</span></label>
+                                <p style="font-size: 12px; color: #666;">Épuré, ligne claire</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style2" name="style_graphique" value="vintage" onchange="toggleOtherStyle()">
+                                <label for="style2"><span>Vintage</span></label>
+                                <p style="font-size: 12px; color: #666;">Rétro, nostalgique</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style3" name="style_graphique" value="moderne" onchange="toggleOtherStyle()">
+                                <label for="style3"><span>Moderne</span></label>
+                                <p style="font-size: 12px; color: #666;">Contemporain, dynamique</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style4" name="style_graphique" value="luxe" onchange="toggleOtherStyle()">
+                                <label for="style4"><span>Luxe</span></label>
+                                <p style="font-size: 12px; color: #666;">Premium, élégant</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style5" name="style_graphique" value="playful" onchange="toggleOtherStyle()">
+                                <label for="style5"><span>Playful</span></label>
+                                <p style="font-size: 12px; color: #666;">Ludique, amusant</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style6" name="style_graphique" value="corporate" onchange="toggleOtherStyle()">
+                                <label for="style6"><span>Corporate</span></label>
+                                <p style="font-size: 12px; color: #666;">Professionnel, sérieux</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style7" name="style_graphique" value="naturel" onchange="toggleOtherStyle()">
+                                <label for="style7"><span>Naturel</span></label>
+                                <p style="font-size: 12px; color: #666;">Bio, authentique</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style8" name="style_graphique" value="tech" onchange="toggleOtherStyle()">
+                                <label for="style8"><span>Tech</span></label>
+                                <p style="font-size: 12px; color: #666;">Futuriste, innovant</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style9" name="style_graphique" value="artisanal" onchange="toggleOtherStyle()">
+                                <label for="style9"><span>Artisanal</span></label>
+                                <p style="font-size: 12px; color: #666;">Fait main, unique</p>
+                            </div>
+                            <div class="style-card">
+                                <input type="checkbox" id="style10" name="style_graphique" value="autre" onchange="toggleOtherStyle()">
+                                <label for="style10"><span>Autre</span></label>
+                            </div>
+                        </div>
+                        <div id="autre_style_box" style="display:none; margin-top: 15px;">
+                            <textarea placeholder="Décrivez le style graphique que vous envisagez" data-question="autre_style"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quel style voudriez-vous absolument éviter ?</label>
+                        <textarea placeholder="Ex: Trop coloré, minimaliste extrême, vintage" data-question="style_a_eviter"></textarea>
+                    </div>
+                </div>
+
+                <!-- POLICE D'ÉCRITURE -->
+                <div class="section">
+                    <h2 class="section-title">✍️ Police d'écriture</h2>
+
+                    <div class="question-group">
+                        <label>Quel style de police d'écriture vous attire le plus ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Choisissez parmi ces catégories principales</p>
+                        <div class="radio-group" style="font-size: 16px;">
+                            <label style="margin-bottom: 10px;"><input type="radio" name="police_style" value="serif" onchange="toggleOtherPolice()"> <span style="font-family: Georgia, serif;">Serif (élégant, classique)</span></label>
+                            <label style="margin-bottom: 10px;"><input type="radio" name="police_style" value="sans-serif" onchange="toggleOtherPolice()"> <span style="font-family: Arial, sans-serif;">Sans-serif (moderne, lisible)</span></label>
+                            <label style="margin-bottom: 10px;"><input type="radio" name="police_style" value="script" onchange="toggleOtherPolice()"> <span style="font-family: 'Brush Script MT', cursive;">Script (manuscrit, personnel)</span></label>
+                            <label style="margin-bottom: 10px;"><input type="radio" name="police_style" value="monospace" onchange="toggleOtherPolice()"> <span style="font-family: 'Courier New', monospace;">Monospace (technique)</span></label>
+                            <label><input type="radio" name="police_style" value="autre_police" onchange="toggleOtherPolice()"> Autre</label>
+                        </div>
+                        <div id="autre_police_box" style="display:none; margin-top: 15px;">
+                            <textarea placeholder="Décrivez le style de police que vous préférez" data-question="autre_police"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quel style de police voudriez-vous absolument éviter ?</label>
+                        <textarea placeholder="Ex: Script trop stylisé, polices trop fines, trop épaisse" data-question="police_a_eviter"></textarea>
+                    </div>
+                </div>
+
+                <!-- PALETTE DE COULEURS -->
+                <div class="section">
+                    <h2 class="section-title">🌈 Palette de couleurs</h2>
+
+                    <div class="question-group">
+                        <label>Choisissez vos 3 couleurs préférées dans cette palette arc-en-ciel</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Cliquez sur les couleurs pour les sélectionner par ordre de préférence (1ère, 2ème, 3ème)</p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 20px;">
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FF0000', 1)" style="width: 60px; height: 60px; background: #FF0000; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Rouge"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Rouge</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FF7F00', 1)" style="width: 60px; height: 60px; background: #FF7F00; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Orange"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Orange</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FFFF00', 1)" style="width: 60px; height: 60px; background: #FFFF00; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Jaune"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Jaune</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#00B050', 1)" style="width: 60px; height: 60px; background: #00B050; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Vert"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Vert</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#0070C0', 1)" style="width: 60px; height: 60px; background: #0070C0; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Bleu"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Bleu</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#4B0082', 1)" style="width: 60px; height: 60px; background: #4B0082; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Indigo"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Indigo</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#9400D3', 1)" style="width: 60px; height: 60px; background: #9400D3; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Violet"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Violet</p>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 20px;">
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FF6B9D', 1)" style="width: 60px; height: 60px; background: #FF6B9D; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Rose"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Rose</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FFB347', 1)" style="width: 60px; height: 60px; background: #FFB347; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Pêche"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Pêche</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FFEB3B', 1)" style="width: 60px; height: 60px; background: #FFEB3B; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Jaune clair"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Jaune clair</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#4CAF50', 1)" style="width: 60px; height: 60px; background: #4CAF50; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Vert clair"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Vert clair</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#2196F3', 1)" style="width: 60px; height: 60px; background: #2196F3; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Bleu clair"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Bleu clair</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#673AB7', 1)" style="width: 60px; height: 60px; background: #673AB7; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Pourpre"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Pourpre</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#9C27B0', 1)" style="width: 60px; height: 60px; background: #9C27B0; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Magenta"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Magenta</p>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#000000', 1)" style="width: 60px; height: 60px; background: #000000; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto; box-shadow: 0 0 0 1px #ccc;" class="rainbow-color" title="Noir"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Noir</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#FFFFFF', 1)" style="width: 60px; height: 60px; background: #FFFFFF; border-radius: 8px; cursor: pointer; border: 3px solid #ccc; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Blanc"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Blanc</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#CC8B00', 1)" style="width: 60px; height: 60px; background: #CC8B00; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Ocre"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Ocre</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div onclick="selectRainbowColor('#800020', 1)" style="width: 60px; height: 60px; background: #800020; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; margin: 0 auto;" class="rainbow-color" title="Bordeaux"></div>
+                                <p style="font-size: 11px; margin-top: 5px;">Bordeaux</p>
+                            </div>
+                        </div>
+
+                        <div style="background: #f0f7f0; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                            <p style="font-weight: 600; margin-bottom: 10px;">Vos 3 couleurs sélectionnées :</p>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 600;">1ère couleur (principale)</label>
+                                    <div id="color1_display" style="width: 100%; height: 60px; background: #f0f0f0; border-radius: 6px; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">Cliquez une couleur</div>
+                                    <input type="hidden" id="couleur_principale" data-question="couleur_principale" value="">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 600;">2ème couleur (secondaire)</label>
+                                    <div id="color2_display" style="width: 100%; height: 60px; background: #f0f0f0; border-radius: 6px; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">Cliquez une couleur</div>
+                                    <input type="hidden" id="couleur_secondaire" data-question="couleur_secondaire" value="">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 600;">3ème couleur (accent)</label>
+                                    <div id="color3_display" style="width: 100%; height: 60px; background: #f0f0f0; border-radius: 6px; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">Cliquez une couleur</div>
+                                    <input type="hidden" id="couleur_accent" data-question="couleur_accent" value="">
+                                </div>
+                            </div>
+
+                            <!-- Quelles couleurs éviter? -->
+                            <div class="question-group" style="margin-top: 30px;">
+                                <label>Quelles couleurs voulez-vous absolument éviter ?</label>
+                                <textarea placeholder="Ex: Le noir, les couleurs trop flashy, les pastels..." data-question="couleurs_eviter"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOGO PRINCIPAL -->
+                <div class="section">
+                    <h2 class="section-title">📍 Logo principal</h2>
+
+                    <div class="question-group">
+                        <label>Êtes-vous satisfait(e) de votre logo actuel ?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="logo_satisfaction" value="totalement"> Oui, totalement</label>
+                            <label><input type="radio" name="logo_satisfaction" value="partiellement"> Partiellement, quelques ajustements seraient bienvenus</label>
+                            <label><input type="radio" name="logo_satisfaction" value="non"> Non, il faudrait le refaire</label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Pour votre logo principal vous souhaitez :</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="type_logo" value="texte"> Uniquement du texte</label>
+                            <label><input type="radio" name="type_logo" value="texte_symbole"> Texte + symbole</label>
+                            <label><input type="radio" name="type_logo" value="symbole"> Symbole uniquement</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ANIMATIONS -->
+                <div class="section">
+                    <h2 class="section-title">⚡ Animations</h2>
+
+                    <div class="question-group">
+                        <label>Aimeriez-vous des animations, du mouvement visuel, ou une approche statique et stable ?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="animations_preference" value="dynamique" onchange="toggleOtherAnim()"> Animations & mouvement (dynamique)</label>
+                            <label><input type="radio" name="animations_preference" value="statique" onchange="toggleOtherAnim()"> Statique & stable (intemporel)</label>
+                            <label><input type="radio" name="animations_preference" value="equilibre" onchange="toggleOtherAnim()"> Les deux en équilibre</label>
+                            <label><input type="radio" name="animations_preference" value="autre_anim" onchange="toggleOtherAnim()"> Autre</label>
+                        </div>
+                        <div id="autre_anim_box" style="display:none; margin-top: 15px;">
+                            <textarea placeholder="Décrivez votre préférence" data-question="autre_animations"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Connaissez-vous des sites que vous trouvez beau et inspirants ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Exemple: site de Apple. Peut concerner des sites de votre secteur ou hors de votre secteur</p>
+                        <textarea placeholder="Ex: www.apple.com, www.airbnb.com" data-question="sites_inspirants"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Connaissez-vous des sites d'artisans que vous trouviez beaux ou inspirants ?</label>
+                        <textarea placeholder="Ex: www.exemple-artisan.com" data-question="sites_artisans"></textarea>
+                    </div>
+                </div>
+
+                <!-- PHOTOGRAPHIE -->
+                <div class="section">
+                    <h2 class="section-title">📸 Photographie</h2>
+
+                    <div class="question-group">
+                        <label>Quel type de photos voudriez-vous mettre sur votre site ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Vous pouvez choisir plusieurs options</p>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="type_photos" value="avant_apres"> Deux photos qui montrent un Avant/Après (recommandé)</label>
+                            <label><input type="checkbox" name="type_photos" value="resultat"> Le résultat finalement uniquement</label>
+                            <label><input type="checkbox" name="type_photos" value="etapes"> Les étapes de votre travail</label>
+                            <label><input type="checkbox" name="type_photos" value="les_deux"> Les deux</label>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Inclusion de photos personnelles sur le site</label>
+                        <div style="background: #f0f7f0; padding: 15px; border-radius: 6px; border-left: 3px solid #3d7a3a;">
+                            <p style="margin-bottom: 15px; font-weight: 600;">Vous travaillez seul(e)</p>
+                            <label style="display: block; margin-bottom: 10px;"><input type="radio" name="photo_solo" value="oui"> Oui, m'inclure ma photo</label>
+                            <label><input type="radio" name="photo_solo" value="non"> Non</label>
+                        </div>
+                        <div style="background: #f0f7f0; padding: 15px; border-radius: 6px; border-left: 3px solid #3d7a3a; margin-top: 15px;">
+                            <p style="margin-bottom: 15px; font-weight: 600;">Vous travaillez en équipe</p>
+                            <label style="display: block; margin-bottom: 10px;"><input type="radio" name="photo_equipe" value="oui"> Oui, inclure la photo de votre équipe</label>
+                            <label><input type="radio" name="photo_equipe" value="non"> Non</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUPPORT VISUELS -->
+                <div class="section">
+                    <h2 class="section-title">🎯 Support Visuels</h2>
+
+                    <div class="question-group">
+                        <label>Sur quels supports allez-vous utiliser votre identité visuelle ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Sélectionnez tous les supports concernés</p>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="supports_visuels" value="site"> Site internet</label>
+                            <label><input type="checkbox" name="supports_visuels" value="reseaux"> Réseaux sociaux</label>
+                            <label><input type="checkbox" name="supports_visuels" value="vehicule"> Véhicule utilitaire</label>
+                            <label><input type="checkbox" name="supports_visuels" value="carte_visite"> Carte de visite</label>
+                            <label><input type="checkbox" name="supports_visuels" value="devis_factures"> Devis / factures</label>
+                            <label><input type="checkbox" name="supports_visuels" value="enseigne"> Enseigne</label>
+                            <label><input type="checkbox" name="supports_visuels" value="vetements"> Vêtements de travail</label>
+                            <label><input type="checkbox" name="supports_visuels" value="casque"> Casque</label>
+                            <label><input type="checkbox" name="supports_visuels" value="signature_email"> Signature e-mail</label>
+                            <label><input type="checkbox" name="supports_visuels" value="flyers"> Flyers</label>
+                            <label><input type="checkbox" name="supports_visuels" value="banderoles"> Banderoles de chantier</label>
+                            <label><input type="checkbox" name="supports_visuels" value="autre_support" onchange="toggleOtherSupport()"> Autre</label>
+                        </div>
+                        <div id="autre_support_box" style="display:none; margin-top: 15px;">
+                            <textarea placeholder="Précisez les autres supports" data-question="autre_support"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="switchTab(0)">← Retour: Votre activité</button>
+                    <button class="btn btn-primary" onclick="switchTab(2)">Suivant: Les pages →</button>
+                </div>
+            </div>
+
+            <!-- TAB 3: LES PAGES -->
+            <div class="tab-content">
+                <!-- PARTIE 1: ÊTRE TROUVÉ SUR GOOGLE -->
+                <div class="section">
+                    <h2 class="section-title">Partie 1 : Être trouvé sur Google</h2>
+
+                    <div class="question-group">
+                        <label>Que doivent écrire vos clients sur Google pour vous trouver ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Citez tous les mots, expressions et questions possibles que vos clients pourraient taper.</p>
+                        <textarea placeholder="Ex:&#10;• Menuisier Strasbourg&#10;• Pose de cuisine&#10;• Terrasse bois&#10;• Menuisier Obernai&#10;• Escalier sur mesure" data-question="google_search_terms" style="min-height: 150px;"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Aviez-vous une fiche Google ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Il s'agit de la fiche Google où sont indiqués vos horaires, l'adresse de votre entreprise, etc.</p>
+                        <div class="radio-group">
+                            <label><input type="radio" name="fiche_google" value="oui"> Oui</label>
+                            <label><input type="radio" name="fiche_google" value="non"> Non</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PARTIE 2: PAGE D'ACCUEIL -->
+                <div class="section">
+                    <h2 class="section-title">Partie 2 : Page d'accueil</h2>
+
+                    <div class="question-group">
+                        <label>Quel est le résultat principal que vos clients obtiennent grâce à vous ?</label>
+                        <textarea placeholder="Ex: Une maison rénovée qui augmente la valeur de leur patrimoine" data-question="accueil_resultat_principal"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quels éléments souhaitez-vous afficher près de vos "boutons d'appel à l'action" pour rassurer vos futurs clients ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Choisissez au minimum trois éléments</p>
+                        <div class="supports-grid">
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="devis_gratuit">
+                                <label>Devis gratuit</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="sans_engagement">
+                                <label>Sans engagement</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="reponse_24h">
+                                <label>Réponse sous 24h</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="intervention_rapide">
+                                <label>Intervention rapide</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="garantie_decennale">
+                                <label>Garantie décennale</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="assurance_pro">
+                                <label>Assurance professionnelle</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="artisan_certifie">
+                                <label>Artisan certifié (Qualibat, RGE, etc.)</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="experience">
+                                <label>Plus de ___ années d'expérience</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="realisations">
+                                <label>Plus de ___ réalisations</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="clients_satisfaits">
+                                <label>Plus de ___ clients satisfaits</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="note_google">
+                                <label>Note Google : _____ /5</label>
+                            </div>
+                            <div class="support-checkbox">
+                                <input type="checkbox" name="accueil_reassurance" value="autre">
+                                <label>Autre</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Quels sont les principaux problèmes que vos clients rencontrent le plus souvent ?</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Citez en minimum 3</p>
+                        <div id="problemes_container">
+                            <div style="margin-bottom: 20px;">
+                                <label style="margin-bottom: 5px; display: block;">Problème 1 :</label>
+                                <input type="text" placeholder="Décrivez le problème" data-question="accueil_pb1">
+                                <label style="margin-bottom: 5px; display: block; margin-top: 10px;">Solution :</label>
+                                <input type="text" placeholder="En une phrase, quelle est la solution ?" data-question="accueil_pb1_solution">
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <label style="margin-bottom: 5px; display: block;">Problème 2 :</label>
+                                <input type="text" placeholder="Décrivez le problème" data-question="accueil_pb2">
+                                <label style="margin-bottom: 5px; display: block; margin-top: 10px;">Solution :</label>
+                                <input type="text" placeholder="En une phrase, quelle est la solution ?" data-question="accueil_pb2_solution">
+                            </div>
+                            <div style="margin-bottom: 20px;">
+                                <label style="margin-bottom: 5px; display: block;">Problème 3 :</label>
+                                <input type="text" placeholder="Décrivez le problème" data-question="accueil_pb3">
+                                <label style="margin-bottom: 5px; display: block; margin-top: 10px;">Solution :</label>
+                                <input type="text" placeholder="En une phrase, quelle est la solution ?" data-question="accueil_pb3_solution">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addProblem()" style="background: #3d7a3a; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;">+ Ajouter un problème</button>
+                    </div>
+
+
+
+                    <div class="question-group">
+                        <label>Citez 3 chiffres qui montrent votre expérience, votre savoir-faire ou la confiance que vos clients vous accordent</label>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: #f0f7ff; border-radius: 6px;">
+                            <label style="margin-bottom: 5px; display: block; font-weight: 600; color: #185fa5;">1️⃣ Expérience / ancienneté</label>
+                            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Exemple : X années d'expérience</p>
+                            <input type="text" placeholder="Ex: 15 années d'expérience" data-question="accueil_chiffre1">
+                        </div>
+
+                        <div style="margin-bottom: 20px; padding: 15px; background: #f0f7ff; border-radius: 6px;">
+                            <label style="margin-bottom: 5px; display: block; font-weight: 600; color: #185fa5;">2️⃣ Réalisations / volume d'activité</label>
+                            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Exemple : X chantiers réalisés, X projets terminés, X clients accompagnés</p>
+                            <input type="text" placeholder="Ex: 500+ chantiers réalisés" data-question="accueil_chiffre2">
+                        </div>
+
+                        <div style="padding: 15px; background: #f0f7ff; border-radius: 6px;">
+                            <label style="margin-bottom: 5px; display: block; font-weight: 600; color: #185fa5;">3️⃣ Satisfaction / preuve de confiance</label>
+                            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Exemple : X avis clients, note Google, X% de satisfaction</p>
+                            <input type="text" placeholder="Ex: 4.9/5 sur Google (150+ avis)" data-question="accueil_chiffre3">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PARTIE 3: PAGE SERVICES ET TARIFS -->
+                <div class="section">
+               <h2 class="section-title">Partie 3 : Page Services et Tarifs</h2>
+                    <div class="question-group">
+                        <label>Comment souhaitez-vous présenter les tarifs ?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="services_tarifs" value="affichés" onchange="toggleServicePrices()"> Prix affichés</label>
+                            <label><input type="checkbox" name="services_tarifs" value="devis" onchange="toggleServicePrices()"> Devis sur demande</label>
+                            <label><input type="checkbox" name="services_tarifs" value="les_deux" onchange="toggleServicePrices()"> Les deux</label>
+                        </div>
+                    </div>
+                    <div class="question-group">
+                        <label>Vos services</label>
+                        <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Listez tous les services que vous proposez. Pour chaque service, répondez aux questions suivantes :</p>
+                        
+                        <div id="services_container">
+                            <div style="margin-bottom: 25px; padding: 15px; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 6px;">
+                                <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Service n°1</label>
+                                
+                                <label style="margin-top: 10px;">Nom du service :</label>
+                                <input type="text" placeholder="Ex: Pose de cuisine" data-question="service1_nom">
+
+                                <label>À quel problème répond-il ?</label>
+                                <input type="text" placeholder="Ex: Cuisine obsolète et inefficace" data-question="service1_probleme">
+
+                                <label>En quoi consiste ce service ?</label>
+                                <input type="text" placeholder="Description brève du service" data-question="service1_consist">
+
+                                <label>Quels résultats le client obtient-il ?</label>
+                                <input type="text" placeholder="Ex: Cuisine moderne, fonctionnelle et esthétique" data-question="service1_resultats">
+
+                                <label>Pourquoi choisir ce service plutôt qu'un autre ?</label>
+                                <input type="text" placeholder="Votre différenciation" data-question="service1_pourquoi">
+
+                                <label>Sous quel délai le client voit-il les premiers résultats ?</label>
+                                <input type="text" placeholder="Ex: En 2-3 semaines" data-question="service1_delai">
+
+                                <label style="margin-top: 15px;">Prix du service :</label>
+                                <div id="service1_price_section" style="display: none; margin-top: 8px; padding: 10px; background: #fff0e6; border-radius: 6px; border: 1px solid #ffc107;">
+                                    <input type="text" placeholder="Ex: À partir de 2500€" data-question="service1_prix">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="addService()" style="background: #ffc107; color: #333; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">+ Ajouter un service</button>
+            </div>
+        </div>
+
+                <!-- PARTIE 4: PAGE RÉALISATIONS -->
+                    <div class="section">
+                    <h2 class="section-title">Partie 4 : Page Réalisations</h2>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Cette partie sert à présenter vos réalisations les plus importantes.</p>
+
+                    <div id="projets_container">
+                        <div style="margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;">
+                            <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Réalisation n°1</label>
+
+                            <label>Quel était le besoin du client ?</label>
+                            <textarea placeholder="Décrivez le besoin" data-question="projet1_besoin"></textarea>
+
+                            <label>Quel problème rencontrait-il ?</label>
+                            <textarea placeholder="Décrivez le problème" data-question="projet1_pb"></textarea>
+
+                            <label>Quelle solution avez-vous apportée ?</label>
+                            <textarea placeholder="Décrivez la solution apportée" data-question="projet1_solution"></textarea>
+
+                            <label>Quel a été le résultat ?</label>
+                            <textarea placeholder="Décrivez le résultat final" data-question="projet1_resultat"></textarea>
+
+                            <label>Avez vous des photos avant/après de votre travail ?</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="projet1_photos" value="oui" onchange="toggleProjectUpload(1)"> Oui</label>
+                                <label><input type="radio" name="projet1_photos" value="non" onchange="toggleProjectUpload(1)"> Non</label>
+                            </div>
+
+                            <div id="projet1_upload_section" style="display:none; margin-top: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #4caf50;">
+                                <label style="color: #2e7d32; font-weight: 600;">Voulez vous les mettre sur votre site ? <span style="color: #ff9800; font-size: 12px;">(fortement recommandé)</span></label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="projet1_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(1)"> Oui</label>
+                                    <label><input type="radio" name="projet1_mettre_online" value="non" onchange="toggleProjectPhotosUpload(1)"> Non</label>
+                                </div>
+                                <div id="projet1_photos_upload_box" style="display:none; margin-top: 12px;">
+                                    <label>Importez vos photos avant/après :</label>
+                                    <input type="file" multiple accept="image/*" data-question="projet1_photos_files" style="margin-bottom: 10px;">
+                                    <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="addRéalisation()" style="background: #9c27b0; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">+ Ajouter un projet</button>
+                </div>
+
+                <!-- PARTIE 5: PAGE À PROPOS -->
+                <div class="section">
+                    <h2 class="section-title">Partie 5 : Page À propos</h2>
+
+                    <div class="question-group">
+                        <label>Quelle est l'histoire de votre entreprise ?</label>
+                        <textarea placeholder="Racontez l'origine, la fondation, les débuts, comment c'est né..." data-question="about_histoire" style="min-height: 120px;"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Pourquoi avez-vous créé cette entreprise ?</label>
+                        <textarea placeholder="Racontez l'origine, la motivation" data-question="about_pourquoi"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Qu'est-ce qui vous passionne dans votre métier ?</label>
+                        <textarea placeholder="Votre passion, ce qui vous pousse chaque jour" data-question="about_passion"></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Est-ce qu'il y a des certifications/labels obligatoires à afficher sur votre site ?</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="certifications_obligatoires" value="CNIL_RGPD"> CNIL / RGPD</label>
+                            <label><input type="checkbox" name="certifications_obligatoires" value="qualibat"> Qualibat</label>
+                            <label><input type="checkbox" name="certifications_obligatoires" value="rge"> RGE (Reconnu Garant de l'Environnement)</label>
+                            <label><input type="checkbox" name="certifications_obligatoires" value="iso"> ISO</label>
+                            <label><input type="checkbox" name="certifications_obligatoires" value="avis_clients"> Avis clients certifiés</label>
+                            <label><input type="checkbox" name="certifications_obligatoires" value="autre"> Autre</label>
+                        </div>
+                        <textarea placeholder="Si autre, précisez les certifications/labels obligatoires..." data-question="certifications_autre" style="margin-top: 10px;"></textarea>
+                    </div>
+                </div>
+
+                <!-- PARTIE 6: PAGE CONTACT -->
+                <div class="section">
+                    <h2 class="section-title">Partie 6 : Page Contact</h2>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">La page contact doit inspirer confiance et faciliter le premier contact.</p>
+
+                    <!-- SECTION FORMULAIRE -->
+                    <div class="question-group" style="background: #e3f2fd; border-left-color: #2196f3;">
+                        <label style="font-weight: 700; color: #1565c0; display: block; margin-bottom: 15px;">📝 Formulaire de contact</label>
+
+                        <label>Titre de la section formulaire</label>
+                        <input type="text" placeholder="Ex: Écrivez-nous, Contactez-nous, Demandez un devis" data-question="contact_formulaire_titre">
+
+                        <label>Description / Accroche (optionnel)</label>
+                        <textarea placeholder="Ex: Remplissez le formulaire et nous vous répondons sous 24h" data-question="contact_formulaire_desc"></textarea>
+
+                        <label>Champs du formulaire à afficher (sélectionnez tous les champs pertinents)</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="contact_form_fields" value="nom"> Nom et prénom</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="tel"> Téléphone</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="email"> Email</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="projet"> Description du projet / demande</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="budget"> Budget</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="urgence"> Urgence / Timeline</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="secteur"> Secteur d'activité</label>
+                            <label><input type="checkbox" name="contact_form_fields" value="messages"> Messages/Notifications à afficher</label>
+                        </div>
+
+                        <label style="margin-top: 15px; display: block;">Texte du bouton d'envoi</label>
+                        <input type="text" placeholder="Ex: Envoyer ma demande, Demander un devis" data-question="contact_bouton_texte">
+
+                        <label>Message de confirmation après envoi <span style="color: #ff9800; font-size: 12px;">(optionnel mais fortement recommandé)</span></label>
+                        <input type="text" placeholder="Ex: Merci ! Nous vous recontacterons très rapidement." data-question="contact_message_confirmation">
+                    </div>
+
+                    <!-- SECTION INFORMATIONS DE CONTACT -->
+                    <div class="question-group" style="background: #f3e5f5; border-left-color: #9c27b0; margin-top: 20px;">
+                        <label style="font-weight: 700; color: #6a1b9a; display: block; margin-bottom: 15px;">👥 Contacts</label>
+
+                        <div id="contacts_container">
+                            <!-- Contact 1 -->
+                            <div style="padding: 12px; background: white; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid #9c27b0;">
+                                <label style="margin-bottom: 5px; display: block; font-weight: 600;">Contact 1</label>
+                                <label>Nom et prénom :</label>
+                                <input type="text" placeholder="Nom complet" data-question="contact_person1_name">
+                                <label>Titre / Fonction :</label>
+                                <input type="text" placeholder="Fonction" data-question="contact_person1_titre">
+                                <label>Téléphone :</label>
+                                <input type="tel" placeholder="Téléphone" data-question="contact_person1_tel">
+                                <label>Email :</label>
+                                <input type="email" placeholder="Email" data-question="contact_person1_email">
+                            </div>
+                        </div>
+                        <button type="button" onclick="addContact()" style="background: #9c27b0; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">+ Ajouter un contact</button>
+                    </div>
+
+                    <!-- SECTION ADRESSE -->
+                    <div class="question-group" style="background: #fff3e0; border-left-color: #ff9800; margin-top: 20px;">
+                        <label style="font-weight: 700; color: #e65100; display: block; margin-bottom: 10px;">📍 Adresse de l'entreprise</label>
+
+                        <label>Adresse complète</label>
+                        <input type="text" placeholder="Ex: 14 Rue de l'Étang, 67600 Bindernheim" data-question="contact_adresse_complete">
+
+                        <label>Code postal</label>
+                        <input type="text" placeholder="Ex: 67600" data-question="contact_code_postal">
+
+                        <label>Ville</label>
+                        <input type="text" placeholder="Ex: Bindernheim" data-question="contact_ville">
+                    </div>
+
+
+
+                    <!-- SECTION HORAIRES -->
+                    <div class="question-group" style="background: #f1f8e9; border-left-color: #8bc34a; margin-top: 20px;">
+                        <label style="font-weight: 700; color: #33691e; display: block; margin-bottom: 10px;">🕐 Horaires d'ouverture</label>
+
+                        <label>Lundi à vendredi / Lundi à samedi</label>
+                        <input type="text" placeholder="Ex: 7h - 18h" data-question="contact_horaires_semaine">
+
+                        <label>Samedi (si différent)</label>
+                        <input type="text" placeholder="Ex: 8h - 17h" data-question="contact_horaires_samedi">
+
+                        <label>Dimanche</label>
+                        <input type="text" placeholder="Ex: Fermé" data-question="contact_horaires_dimanche">
+
+                        <label>Note importante (optionnel)</label>
+                        <textarea placeholder="Ex: Interventions et devis sur rendez-vous" data-question="contact_horaires_note"></textarea>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="switchTab(1)">← Retour: Aspect visuel</button>
+                    <button class="btn btn-primary" onclick="switchTab(3)">Voir mes réponses →</button>
+                   </div>
+                </div>
+             </div>
+        </div>
+
+            <!-- TAB 4: VOS RÉPONSES -->
+            <div class="tab-content">
+                <div class="section">
+                    <h2 class="section-title">📊 Récapitulatif de vos réponses</h2>
+                    <p style="margin-bottom: 20px; color: #666;">Vos réponses sont conservées localement dans votre navigateur.</p>
+
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                        <div style="font-weight: 700; color: #856404; font-size: 16px; margin-bottom: 10px;">⚠️ Important - Validez votre questionnaire!</div>
+                        <p style="color: #856404; margin-bottom: 10px; line-height: 1.6;">
+                            Pour valider votre questionnaire et permettre à Luminixe de traiter votre demande, <strong>vous DEVEZ réserver votre rendez-vous en visio</strong>.
+                        </p>
+                        <p style="color: #856404; font-size: 14px;">
+                            👇 <strong>Descendez tout en bas de cette page</strong> et cliquez sur le bouton "🎯 Réserver mon rdv en visio" pour finaliser votre démarche.
+                        </p>
+                    </div>
+
+                    <div id="summary"></div>
+
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+                        <a href="https://calendly.com/luminixe-web/new-meeting" target="_blank" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; text-decoration: none; width: 100%; padding: 15px; font-size: 16px; font-weight: 700;">🎯 Réserver mon rdv en visio</a>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="switchTab(2)">← Retour: Les pages</button>
+                    <button class="btn btn-secondary" disabled>Fin du questionnaire ✓</button>
+        </div>
+    </div>
+
+    <script>
+        // Sauvegarder automatiquement les données
+        function saveData() {
+            const data = {};
+               
+            // Capturer les éléments avec data-question
+            document.querySelectorAll('[data-question]').forEach(el => {
+                data[el.getAttribute('data-question')] = el.value;
+            });
+            
+            // ✅ AJOUTER AUSSI ceux avec un "name" (inputs normaux)
+            document.querySelectorAll('input[name]:not([type="radio"]):not([type="checkbox"]), textarea[name], select[name]').forEach(el => {
+                if (el.name && !data[el.name]) {
+                    data[el.name] = el.value;
+                }
+            });
+            
+            // Radios et checkboxes
+            document.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked').forEach(el => {
+                if (!data[el.name]) data[el.name] = [];
+                if (el.type === 'checkbox') {
+                    data[el.name].push(el.value);
+                } else {
+                    data[el.name] = el.value;
+                }
+            });
+            
+            localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            updateSummary();
+        }
+
+        // Charger les données sauvegardées
+        function loadData() {
+            const saved = localStorage.getItem('questionnaire_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                // Charger les éléments avec data-question
+                Object.entries(data).forEach(([key, value]) => {
+                    const el = document.querySelector(`[data-question="${key}"]`);
+                    if (el) el.value = Array.isArray(value) ? value[0] : value;
+                });
+                
+                // ✅ AJOUTER : Charger aussi les inputs normaux avec name
+                Object.entries(data).forEach(([key, value]) => {
+                    const el = document.querySelector(`input[name="${key}"]:not([type="radio"]):not([type="checkbox"]), textarea[name="${key}"], select[name="${key}"]`);
+                    if (el) el.value = Array.isArray(value) ? value[0] : value;
+                });
+                
+                // Radios et checkboxes
+                Object.entries(data).forEach(([key, value]) => {
+                    const radioEl = document.querySelector(`input[name="${key}"][value="${value}"]`);
+                    if (radioEl) radioEl.checked = true;
+                    
+                    if (Array.isArray(value)) {
+                        value.forEach(v => {
+                            const checkEl = document.querySelector(`input[name="${key}"][value="${v}"]`);
+                            if (checkEl) checkEl.checked = true;
+                        });
+                    }
+                });
+                
+                // Restaurer la visibilité selon le cas sélectionné
+                setTimeout(() => {
+                    const selectedCase = document.querySelector('input[name="situation_graphique"]:checked');
+                    if (selectedCase) updateVisibility();
+                }, 100);
+            }
+        }
+    
+        // Afficher/masquer textbox pour "Autre" support visuel
+        function toggleOtherSupport() {
+            const isOtherChecked = document.querySelector('input[name="supports_visuels"][value="autre_support"]:checked');
+            const otherBox = document.getElementById('autre_support_box');
+            if (isOtherChecked) {
+                otherBox.style.display = 'block';
+            } else {
+                otherBox.style.display = 'none';
+            }
+        }
+
+        // Afficher/masquer textbox pour "Autre" CTA
+        function toggleOtherCta() {
+            const selected = document.querySelector('input[name="cta_prioritaire"]:checked');
+            const otherBox = document.getElementById('autre_cta_box');
+            if (selected && selected.value === 'autre_cta') {
+                otherBox.style.display = 'block';
+            } else {
+                otherBox.style.display = 'none';
+            }
+        }
+
+        // Afficher/masquer textbox pour "Autre" Contact
+        function toggleOtherContact() {
+            const selected = document.querySelector('input[name="contact_type"]:checked:not([value="autre_contact"])');
+            const otherBox = document.getElementById('autre_contact_box');
+            const isOtherChecked = document.querySelector('input[name="contact_type"][value="autre_contact"]:checked');
+            if (isOtherChecked) {
+                otherBox.style.display = 'block';
+            } else {
+                otherBox.style.display = 'none';
+            }
+        }
+
+        // Afficher/masquer textbox pour "Autre" Police
+        function toggleOtherPolice() {
+            const selected = document.querySelector('input[name="police_style"]:checked');
+            const otherBox = document.getElementById('autre_police_box');
+            if (selected && selected.value === 'autre_police') {
+                otherBox.style.display = 'block';
+            } else {
+                otherBox.style.display = 'none';
+            }
+        }
+
+        // Sélection des couleurs arc-en-ciel
+        let colorSelection = { 1: null, 2: null, 3: null };
+        let colorOrder = 1;
+
+        function selectRainbowColor(color, order) {
+            if (!colorOrder || colorOrder > 3) colorOrder = 1;
+            
+            colorSelection[colorOrder] = color;
+            const displayIds = ['color1_display', 'color2_display', 'color3_display'];
+            const inputIds = ['couleur_principale', 'couleur_secondaire', 'couleur_accent'];
+            
+            document.getElementById(displayIds[colorOrder - 1]).style.background = color;
+            document.getElementById(displayIds[colorOrder - 1]).textContent = '';
+            document.getElementById(inputIds[colorOrder - 1]).value = color;
+            
+            colorOrder++;
+            if (colorOrder > 3) colorOrder = 1;
+            
+            saveData();
+        }
+
+        // Afficher/masquer textbox pour "Autre" style graphique
+        function toggleOtherStyle() {
+            const selected = document.querySelector('input[name="style_graphique"]:checked');
+            const otherBox = document.getElementById('autre_style_box');
+            if (selected && selected.value === 'autre') {
+                otherBox.style.display = 'block';
+            } else {
+                otherBox.style.display = 'none';
+            }
+        }
+
+        // Afficher/masquer textbox pour "Autre" animation
+        function toggleOtherAnim() {
+            const selected = document.querySelector('input[name="animations_preference"]:checked');
+            const otherBox = document.getElementById('autre_anim_box');
+            if (selected && selected.value === 'autre_anim') {
+                otherBox.style.display = 'block';
+            } else {
+                otherBox.style.display = 'none';
+            }
+        }
+
+        // Gestion des 5 cas de situation graphique
+        function updateVisibility() {
+            const selectedCase = document.querySelector('input[name="situation_graphique"]:checked');
+            if (!selectedCase) return;
+            
+            const caseValue = selectedCase.value;
+            saveData();
+            
+            // Afficher/cacher l'upload charte (case 5 uniquement)
+            const uploadGroup = document.getElementById('upload_charte_group');
+            if (uploadGroup) {
+                uploadGroup.style.display = (caseValue === 'case5') ? 'block' : 'none';
+            }
+            
+            // Afficher/cacher les questions case 3 (Revoir)
+            const case3Questions = document.getElementById('case3_questions');
+            if (case3Questions) {
+                case3Questions.style.display = (caseValue === 'case3') ? 'block' : 'none';
+            }
+            
+            // Logique d'affichage par cas
+            const visibility = {
+                case1: { perception: true, objectif: true, artistique: true, police: true, couleurs: true, logo: true, animations: true, photographie: true, support: true },
+                case2: { perception: true, objectif: true, artistique: true, police: true, couleurs: true, logo: true, animations: true, photographie: true, support: true },
+                case3: { perception: true, objectif: true, artistique: true, police: false, couleurs: false, logo: false, animations: true, photographie: true, support: true },
+                case4: { perception: true, objectif: true, artistique: true, police: true, couleurs: true, logo: true, animations: true, photographie: true, support: true },
+                case5: { perception: true, objectif: true, artistique: false, police: false, couleurs: false, logo: false, animations: true, photographie: true, support: true }
+            };
+            
+            const rules = visibility[caseValue] || visibility.case1;
+            applyVisibilityRules(rules);
+        }
+
+        function applyVisibilityRules(rules) {
+            // Perception client
+            const perceptionSection = document.querySelector('div[data-case="1,2,3,4,5"]');
+            if (perceptionSection) perceptionSection.style.display = rules.perception ? 'block' : 'none';
+            
+            // Trouver et afficher/cacher les sections principales par titre
+            const sections = document.querySelectorAll('.section-title');
+            sections.forEach(title => {
+                const section = title.closest('.section');
+                if (!section) return;
+                
+                if (title.textContent.includes('Objectif du site')) section.style.display = rules.objectif ? 'block' : 'none';
+                else if (title.textContent.includes('Préférence artistique')) section.style.display = rules.artistique ? 'block' : 'none';
+                else if (title.textContent.includes('Police d\'écriture')) section.style.display = rules.police ? 'block' : 'none';
+                else if (title.textContent.includes('Palette de couleurs')) section.style.display = rules.couleurs ? 'block' : 'none';
+                else if (title.textContent.includes('Logo principal')) section.style.display = rules.logo ? 'block' : 'none';
+                else if (title.textContent.includes('Animations')) section.style.display = rules.animations ? 'block' : 'none';
+                else if (title.textContent.includes('Photographie')) section.style.display = rules.photographie ? 'block' : 'none';
+                else if (title.textContent.includes('Support Visuels')) section.style.display = rules.support ? 'block' : 'none';
+            });
+            
+            saveData();
+        }
+
+        // Basculer entre onglets
+        function switchTab(index) {
+            saveData();
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.querySelectorAll('.tab-content')[index].classList.add('active');
+            document.querySelectorAll('.tab-btn')[index].classList.add('active');
+     }
+
+        // Mettre à jour le résumé
+        function updateSummary() {
+            const saved = localStorage.getItem('questionnaire_data');
+            const data = saved ? JSON.parse(saved) : {};
+            let html = '<div class="summary-section">';
+            
+            Object.entries(data).forEach(([key, value]) => {
+                html += `<div class="summary-item">
+                    <strong>${key}:</strong>
+                    <span>${Array.isArray(value) ? value.join(', ') : value}</span>
+                </div>`;
+            });
+            
+            html += '</div>';
+            document.getElementById('summary').innerHTML = html || '<p style="color: #999;">Aucune réponse pour le moment.</p>';
+        }
+
+        // Exporter les données
+        function exportData() {
+            const saved = localStorage.getItem('questionnaire_data');
+            const data = saved ? JSON.parse(saved) : {};
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `questionnaire_luminixe_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        // Effacer les données
+        function clearData() {
+            if (confirm('Êtes-vous sûr(e) de vouloir recommencer ? Toutes vos réponses seront supprimées.')) {
+                localStorage.removeItem('questionnaire_data');
+                location.reload();
+            }
+        }
+
+        // Afficher/masquer section upload photos pour projets
+        function toggleProjectUpload(projectNum) {
+            const uploadSection = document.getElementById(`projet${projectNum}_upload_section`);
+            const hasPhotos = document.querySelector(`input[name="projet${projectNum}_photos"]:checked`);
+            if (uploadSection) {
+                uploadSection.style.display = (hasPhotos && hasPhotos.value === 'oui') ? 'block' : 'none';
+            }
+        }
+
+        // Afficher/masquer champ upload photos
+        function toggleProjectPhotosUpload(projectNum) {
+            const uploadBox = document.getElementById(`projet${projectNum}_photos_upload_box`);
+            const wantOnline = document.querySelector(`input[name="projet${projectNum}_mettre_online"]:checked`);
+            if (uploadBox) {
+                uploadBox.style.display = (wantOnline && wantOnline.value === 'oui') ? 'block' : 'none';
+            }
+        }
+
+        // Ajouter un nouveau problème
+        let problemCount = 3;
+        function addProblem() {
+            problemCount++;
+            const container = document.getElementById('problemes_container');
+            const newProblem = document.createElement('div');
+            newProblem.style.cssText = 'margin-bottom: 20px;';
+            newProblem.innerHTML = `
+                <label style="margin-bottom: 5px; display: block;">Problème ${problemCount} :</label>
+                <input type="text" placeholder="Décrivez le problème" data-question="accueil_pb${problemCount}">
+                <label style="margin-bottom: 5px; display: block; margin-top: 10px;">Solution :</label>
+                <input type="text" placeholder="En une phrase, quelle est la solution ?" data-question="accueil_pb${problemCount}_solution">
+            `;
+            container.appendChild(newProblem);
+            // Ajouter les event listeners pour saveData
+            newProblem.querySelectorAll('input').forEach(el => {
+                el.addEventListener('change', saveData);
+                el.addEventListener('input', saveData);
+            });
+        }
+
+        // Ajouter un nouveau contact
+        let contactCount = 1;
+        function addContact() {
+            contactCount++;
+            const container = document.getElementById('contacts_container');
+            const newContact = document.createElement('div');
+            newContact.style.cssText = 'padding: 12px; background: white; border-radius: 6px; margin-bottom: 12px; border-left: 3px solid #9c27b0;';
+            newContact.innerHTML = `
+                <label style="margin-bottom: 5px; display: block; font-weight: 600;">Contact ${contactCount}</label>
+                <label>Nom et prénom :</label>
+                <input type="text" placeholder="Nom complet" data-question="contact_person${contactCount}_name">
+                <label>Titre / Fonction :</label>
+                <input type="text" placeholder="Fonction" data-question="contact_person${contactCount}_titre">
+                <label>Téléphone :</label>
+                <input type="tel" placeholder="Téléphone" data-question="contact_person${contactCount}_tel">
+                <label>Email :</label>
+                <input type="email" placeholder="Email" data-question="contact_person${contactCount}_email">
+            `;
+            container.appendChild(newContact);
+            // Ajouter les event listeners pour saveData
+            newContact.querySelectorAll('input').forEach(el => {
+                el.addEventListener('change', saveData);
+                el.addEventListener('input', saveData);
+            });
+        }
+
+        // Afficher/cacher les champs Prix selon la sélection des tarifs
+
+        // Ajouter un nouveau service
+        let serviceCount = 1;
+        function addService() {
+            serviceCount++;
+            const container = document.getElementById('services_container');
+            const newService = document.createElement('div');
+            newService.style.cssText = 'margin-bottom: 25px; padding: 15px; background: #fff9e6; border-left: 4px solid #ffc107; border-radius: 6px;';
+            newService.innerHTML = `
+                <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Service n°${serviceCount}</label>
+                
+                <label style="margin-top: 10px;">Nom du service :</label>
+                <input type="text" placeholder="Ex: Pose de cuisine" data-question="service${serviceCount}_nom">
+
+                <label>À quel problème répond-il ?</label>
+                <input type="text" placeholder="Ex: Cuisine obsolète et inefficace" data-question="service${serviceCount}_probleme">
+
+                <label>En quoi consiste ce service ?</label>
+                <input type="text" placeholder="Description brève du service" data-question="service${serviceCount}_consist">
+
+                <label>Quels résultats le client obtient-il ?</label>
+                <input type="text" placeholder="Ex: Cuisine moderne, fonctionnelle et esthétique" data-question="service${serviceCount}_resultats">
+
+                <label>Pourquoi choisir ce service plutôt qu'un autre ?</label>
+                <input type="text" placeholder="Votre différenciation" data-question="service${serviceCount}_pourquoi">
+
+                <label>Sous quel délai le client voit-il les premiers résultats ?</label>
+                <input type="text" placeholder="Ex: En 2-3 semaines" data-question="service${serviceCount}_delai">
+
+                <label style="margin-top: 15px;">Prix du service :</label>
+                <div id="service${serviceCount}_price_section" style="display: none; margin-top: 8px; padding: 10px; background: #fff0e6; border-radius: 6px; border: 1px solid #ffc107;">
+                    <input type="text" placeholder="Ex: À partir de 2500€" data-question="service${serviceCount}_prix">
+                </div>
+            `;
+            container.appendChild(newService);
+            newService.querySelectorAll('input, textarea').forEach(el => {
+                el.addEventListener('change', saveData);
+                el.addEventListener('input', saveData);
+            });
+        }
+
+        // Ajouter une nouvelle réalisation
+        let projectCount = 1;
+        function addRéalisation() {
+            projectCount++;
+            const container = document.querySelector('[data-question="projet1_besoin"]').closest('div').parentElement;
+            const newProject = document.createElement('div');
+            newProject.style.cssText = 'margin-bottom: 25px; padding: 15px; background: #f3e5f5; border-left: 4px solid #9c27b0; border-radius: 6px;';
+            newProject.innerHTML = `
+                <label style="font-weight: 700; color: #333; display: block; margin-bottom: 10px;">Réalisation n°${projectCount}</label>
+
+                <label>Quel était le besoin du client ?</label>
+                <textarea placeholder="Décrivez le besoin" data-question="projet${projectCount}_besoin"></textarea>
+
+                <label>Quel problème rencontrait-il ?</label>
+                <textarea placeholder="Décrivez le problème" data-question="projet${projectCount}_pb"></textarea>
+
+                <label>Quelle solution avez-vous apportée ?</label>
+                <textarea placeholder="Décrivez la solution apportée" data-question="projet${projectCount}_solution"></textarea>
+
+                <label>Quel a été le résultat ?</label>
+                <textarea placeholder="Décrivez le résultat final" data-question="projet${projectCount}_resultat"></textarea>
+
+                <label>Avez vous des photos avant/après de votre travail ?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="projet${projectCount}_photos" value="oui" onchange="toggleProjectUpload(${projectCount})"> Oui</label>
+                    <label><input type="radio" name="projet${projectCount}_photos" value="non" onchange="toggleProjectUpload(${projectCount})"> Non</label>
+                </div>
+
+                <div id="projet${projectCount}_upload_section" style="display:none; margin-top: 15px; padding: 12px; background: #f0f7f0; border-radius: 6px; border-left: 3px solid #4caf50;">
+                    <label style="color: #2e7d32; font-weight: 600;">Voulez vous les mettre sur votre site ? <span style="color: #ff9800; font-size: 12px;">(fortement recommandé)</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="projet${projectCount}_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(${projectCount})"> Oui</label>
+                        <label><input type="radio" name="projet${projectCount}_mettre_online" value="non" onchange="toggleProjectPhotosUpload(${projectCount})"> Non</label>
+                    </div>
+                    <div id="projet${projectCount}_photos_upload_box" style="display:none; margin-top: 12px;">
+                        <label>Importez vos photos avant/après :</label>
+                        <input type="file" multiple accept="image/*" data-question="projet${projectCount}_photos_files" style="margin-bottom: 10px;">
+                        <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newProject);
+            newProject.querySelectorAll('input, textarea').forEach(el => {
+                el.addEventListener('change', saveData);
+                el.addEventListener('input', saveData);
+            });
+        }
+
+        function toggleServicePrices() {
+            const priceChecks = document.querySelectorAll('input[name="services_tarifs"]:checked');
+            const showPrices = Array.from(priceChecks).some(el => el.value === 'affichés' || el.value === 'les_deux');
+            
+            // Afficher/cacher tous les champs prix
+            document.querySelectorAll('[id$="_price_section"]').forEach(section => {
+                section.style.display = showPrices ? 'block' : 'none';
+            });
+            
+            // Ajouter event listeners aux inputs prix
+            document.querySelectorAll('[data-question$="_prix"]').forEach(el => {
+                el.addEventListener('change', saveData);
+                el.addEventListener('input', saveData);
+            });
+        }
+
+        // Initialiser au chargement
+        window.addEventListener('load', () => {
+            loadData();
+            updateSummary();
+            toggleServicePrices();
+            document.querySelectorAll('input, textarea, select').forEach(el => {
+                el.addEventListener('change', saveData);
+                el.addEventListener('input', saveData);
+            });
+        });
+    </script>
+</body>
+</html>
