@@ -1180,10 +1180,6 @@
                                     <label><input type="radio" name="projet1_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(1)"> Oui</label>
                                     <label><input type="radio" name="projet1_mettre_online" value="non" onchange="toggleProjectPhotosUpload(1)"> Non</label>
                                 </div>
-                                <div id="projet1_photos_upload_box" style="display:none; margin-top: 12px;">
-                                    <label>Importez vos photos avant/après :</label>
-                                    <input type="file" multiple accept="image/*" data-question="projet1_photos_files" style="margin-bottom: 10px;">
-                                    <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
                         </div>
                     </div>
                 </div>
@@ -1755,11 +1751,6 @@
                     <div class="radio-group">
                         <label><input type="radio" name="projet${projectCount}_mettre_online" value="oui" onchange="toggleProjectPhotosUpload(${projectCount})"> Oui</label>
                         <label><input type="radio" name="projet${projectCount}_mettre_online" value="non" onchange="toggleProjectPhotosUpload(${projectCount})"> Non</label>
-                    </div>
-                    <div id="projet${projectCount}_photos_upload_box" style="display:none; margin-top: 12px;">
-                        <label>Importez vos photos avant/après :</label>
-                        <input type="file" multiple accept="image/*" data-question="projet${projectCount}_photos_files" style="margin-bottom: 10px;">
-                        <p style="font-size: 11px; color: #666;">Formats acceptés: JPG, PNG. Max 50MB par fichier.</p>
                     </div>
                 </div>
             `;
