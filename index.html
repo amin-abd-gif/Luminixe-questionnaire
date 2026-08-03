@@ -115,6 +115,32 @@
             border-left: 4px solid #3d7a3a;
         }
 
+        .summary-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .summary-item {
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border-left: 3px solid #3d7a3a;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-item strong {
+            color: #2d5a2a;
+            min-width: 200px;
+        }
+
+        .summary-item span {
+            color: #333;
+            text-align: right;
+            flex: 1;
+        }
+
         .question-group.critical {
             border-left-color: #ff9800;
             background: #fff8f0;
@@ -1571,6 +1597,11 @@
             
             document.querySelectorAll('.tab-content')[index].classList.add('active');
             document.querySelectorAll('.tab-btn')[index].classList.add('active');
+            
+            // Mettre à jour le résumé si c'est le TAB 4
+            if (index === 3) {
+                updateSummary();
+            }
      }
 
         // Mettre à jour le résumé
