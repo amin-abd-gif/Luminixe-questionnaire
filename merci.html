@@ -247,7 +247,6 @@
             EMAILJS_CONFIG.SERVICE_ID,
             EMAILJS_CONFIG.TEMPLATE_ID,
             {
-                to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL,
                 subject: `📋 ${data.prenom || ''} ${data.nom || ''} - ${data.entreprise || 'Entreprise'} (${data.metier || 'Métier'})`,
                 json_content: jsonContent
             }
